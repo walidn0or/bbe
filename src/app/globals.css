@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', 'Vazirmatn', 'Noto Sans Arabic', 'Arial Unicode MS', sans-serif;
+}
+
+/* Remove all focus styles globally */
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button:focus,
+button:focus-visible,
+[role="button"]:focus,
+[role="button"]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  ring: none !important;
+} 
