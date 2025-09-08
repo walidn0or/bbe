@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { LanguageProvider } from "@/contexts/language-context"
 import { Header } from "@/components/header"
 import { HeroSection } from "@/components/hero-section"
+import { HomeIntroSection } from "@/components/home-intro-section"
 import { AboutSection } from "@/components/about-section"
 import { ProgramsSection } from "@/components/programs-section"
 import { NewsSection } from "@/components/news-section"
@@ -12,31 +13,62 @@ import { ImpactSection } from "@/components/impact-section"
 import { TestimonialsSection } from "@/components/testimonials-section"
 import { CTASection } from "@/components/cta-section"
 import { ContactSection } from "@/components/contact-section"
-import { Footer } from "@/components/footer"
+import { Footer, SocialLinks } from "@/components/footer"
+import { IntroSection } from "@/components/videos-section"
 
 function HomePage() {
   const [activeSection, setActiveSection] = useState("")
+  const isProgrammaticScrollRef = useRef(false)
 
   // Smooth scroll function with offset for sticky header
   const scrollToSection = (sectionId: string) => {
+    // Handle Home/top explicitly
+    if (!sectionId || sectionId === "home") {
+      setActiveSection("home")
+      isProgrammaticScrollRef.current = true
+      window.scrollTo({ top: 0, behavior: "smooth" })
+      window.setTimeout(() => {
+        isProgrammaticScrollRef.current = false
+      }, 700)
+      return
+    }
+
     const element = document.getElementById(sectionId)
     if (element) {
-      const headerOffset = 80 // Height of sticky header
+      const headerOffset = 80
       const elementPosition = element.getBoundingClientRect().top
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset
 
+      // Optimistically set active to reduce flicker on nav during scroll
+      setActiveSection(sectionId)
+
+      isProgrammaticScrollRef.current = true
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       })
+      window.setTimeout(() => {
+        isProgrammaticScrollRef.current = false
+      }, 700)
     }
   }
 
   // Track active section for navigation highlighting
   useEffect(() => {
     const handleScroll = () => {
+      if (isProgrammaticScrollRef.current) return
       const sections = ["about", "programs", "news", "donate", "impact", "contact"]
       const scrollPosition = window.scrollY + 100
+
+      // If user is above the first section, mark as home
+      const firstSection = document.getElementById("about")
+      if (firstSection) {
+        const top = firstSection.offsetTop
+        if (scrollPosition < top) {
+          setActiveSection("home")
+          return
+        }
+      }
 
       for (const section of sections) {
         const element = document.getElementById(section)
@@ -44,10 +76,13 @@ function HomePage() {
           const { offsetTop, offsetHeight } = element
           if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
             setActiveSection(section)
-            break
+            return
           }
         }
       }
+
+      // Fallback when no section matched
+      setActiveSection("home")
     }
 
     window.addEventListener("scroll", handleScroll)
@@ -59,12 +94,15 @@ function HomePage() {
     <div className="min-h-screen bg-white">
       <Header activeSection={activeSection} scrollToSection={scrollToSection} />
       <HeroSection scrollToSection={scrollToSection} />
+      <HomeIntroSection scrollToSection={scrollToSection} />
       <AboutSection />
       <ProgramsSection />
+      <IntroSection />
       <NewsSection />
       <DonationSection />
       <ImpactSection />
       <TestimonialsSection />
+      <SocialLinks />
       <CTASection scrollToSection={scrollToSection} />
       <ContactSection scrollToSection={scrollToSection} />
       <Footer scrollToSection={scrollToSection} />

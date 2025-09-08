@@ -28,13 +28,14 @@ export function LanguageSwitcher() {
       <Button
         variant="ghost"
         size="sm"
+        className="text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 flex items-center gap-2"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center space-x-2 hover:bg-gray-100 transition-colors ${isRTL ? "flex-row-reverse space-x-reverse" : ""}`}
       >
-        <Globe className="h-4 w-4" />
-        <span className="text-sm font-medium">{currentLanguage?.flag}</span>
-        <span className="hidden md:inline text-sm">{currentLanguage?.nativeName}</span>
-        <ChevronDown className={`h-3 w-3 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <span className="text-lg">{currentLanguage.flag}</span>
+        <span>{currentLanguage.nativeName}</span>
+        <ChevronDown
+          className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
       </Button>
 
       {isOpen && (

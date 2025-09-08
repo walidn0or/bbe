@@ -25,6 +25,7 @@ export const useLanguage = () => {
 const translations:any = {
   en: {
     // Header
+    "header.home": "Home",
     "header.about": "About",
     "header.programs": "Programs",
     "header.news": "News",
@@ -34,7 +35,7 @@ const translations:any = {
     "header.contact": "Contact",
     "header.donate": "Donate Now",
     "header.orgName": "Beyond Borders Empowerment",
-    "header.regNumber": "Reg. No. 15570506",
+    "header.regNumber": "",
 
     // Hero Section
     "hero.badge": "Registered NGO Since 2023",
@@ -45,24 +46,25 @@ const translations:any = {
       "Beyond Borders Empowerment is dedicated to promoting human rights, improving healthcare conditions, and providing access to education in vulnerable regions, with a special focus on empowering women and girls in Afghanistan.",
     "hero.supportMission": "Support Our Mission",
     "hero.getInvolved": "Get Involved",
+    "hero.learnMore": "Learn More",
     "hero.livesImpacted": "Lives Impacted",
+    "hero.imageAlt": "BBE Community Support",
 
     // About Section
     "about.title": "About Beyond Borders Empowerment",
-    "about.subtitle":
-      "Founded in early 2023 by a dedicated team of professionals, including educators, medical doctors, journalists, and human rights defenders.",
-    "about.storyTitle": "Our Story",
+    "about.subtitle": "Organizational Background",
+    "about.storyTitle": "Organizational Background",
     "about.storyText1":
-      "Beyond Borders Empowerment was founded on the principles of human rights, social justice, and respect for human dignity. We believe that a society cannot achieve sustainable growth and development without ensuring equal rights and opportunities for all, particularly for women, who constitute half of the population.",
+      "Beyond Borders Empowerment (BBE) is a registered nonprofit organization founded in early 2023 by a dedicated team of professionals, including educators, university professors, writers, medical doctors, journalists, human rights defenders, and legal experts. BBE is built on the philosophy and principles of human rights, social justice, respect for human dignity, and collective efforts to foster growth and empowerment. At BBE, we work tirelessly towards sustainable outcomes, and we believe in the principle that \"we teach our communities to fish, instead of giving them a fish.\" We are confident that such self-sufficiency and sustainability can only be achieved by ensuring equal rights and opportunities for all, enabling everyone to reach their maximum potential and make a difference — including women and girls, who make up half of the population.",
     "about.storyText2":
-      "Our organization is particularly committed to empowering women and girls in Afghanistan and other underserved areas, ensuring they have access to education, healthcare, and economic opportunities.",
+      "That said, we prioritize not only meeting immediate needs but also fostering long-term sustainable development by equipping marginalized communities with the resources necessary for self-reliance. Since our founding, we have stood firmly committed to empowering marginalized communities by providing access to quality education, fostering economic independence through entrepreneurship and employment, and supporting access to essential healthcare, as well as providing humanitarian aid during crises. Through sustainable, community-led initiatives, we strive to close social gaps and equip individuals to become agents of lasting change.",
     "about.teamText": "Dedicated team of professionals",
     "about.missionTitle": "Our Mission",
     "about.missionText":
       "Our mission is to empower marginalized communities, particularly women and girls, by providing access to quality education, fostering economic independence through entrepreneurship, creating employment opportunities, and delivering essential humanitarian aid.",
     "about.visionTitle": "Our Vision",
     "about.visionText":
-      "To see Afghanistan and other regions facing similar challenges as places where every individual has equal access to education, health, economic opportunities, and sustainable development, regardless of gender, race, background, or language.",
+      "We envision a future where geographical and social barriers no longer dictate an individual's potential. We strive for a world where every girl and woman has the opportunity to achieve her dreams and contribute to a more equitable society.",
     "about.valuesTitle": "Our Core Values",
     "about.valuesSubtitle": "The principles that guide everything we do",
     "about.inclusiveness": "Inclusiveness",
@@ -189,7 +191,7 @@ const translations:any = {
     "donate.completeDonation": "Complete Donation",
     "donate.secureEncrypted": "Your donation is secure and encrypted",
     "donate.taxDeductible":
-      "Beyond Borders Empowerment is a registered charity (Reg. No. 15570506). Your donation is tax-deductible where applicable.",
+      "Beyond Borders Empowerment is a registered charity. Your donation is tax-deductible where applicable.",
     "donate.donationType": "Donation Type",
     "donate.creditDebitCard": "Credit/Debit Card",
     "donate.paypal": "PayPal",
@@ -267,13 +269,14 @@ const translations:any = {
     "footer.volunteer": "Volunteer",
     "footer.partner": "Partner",
     "footer.newsletter": "Newsletter",
-    "footer.copyright": "© 2025 Beyond Borders Empowerment. All rights reserved.",
+    "footer.copyright": " 2025 Beyond Borders Empowerment. All rights reserved.",
     "footer.privacy": "Privacy Policy",
     "footer.terms": "Terms of Service",
   },
 
   fa: {
     // Header - Persian/Farsi
+    "header.home": "خانه",
     "header.about": "درباره ما",
     "header.programs": "برنامه‌ها",
     "header.news": "اخبار",
@@ -283,7 +286,7 @@ const translations:any = {
     "header.contact": "تماس",
     "header.donate": "کمک مالی",
     "header.orgName": "توانمندسازی فراتر از مرزها",
-    "header.regNumber": "شماره ثبت: ۱۵۵۷۰۵۰۶",
+    "header.regNumber": "",
 
     // Hero Section
     "hero.badge": "سازمان غیردولتی ثبت شده از سال ۲۰۲۳",
@@ -294,6 +297,7 @@ const translations:any = {
       "توانمندسازی فراتر از مرزها به ترویج حقوق بشر، بهبود شرایط بهداشتی و دسترسی به آموزش در مناطق آسیب‌پذیر اختصاص دارد، با تمرکز ویژه بر توانمندسازی زنان و دختران در افغانستان.",
     "hero.supportMission": "از ماموریت ما حمایت کنید",
     "hero.getInvolved": "مشارکت کنید",
+    "hero.learnMore": "بیشتر بدانید",
     "hero.livesImpacted": "زندگی‌های تحت تأثیر",
 
     // About Section
@@ -438,7 +442,7 @@ const translations:any = {
     "donate.completeDonation": "تکمیل کمک مالی",
     "donate.secureEncrypted": "کمک مالی شما امن و رمزگذاری شده است",
     "donate.taxDeductible":
-      "توانمندسازی فراتر از مرزها یک خیریه ثبت شده است (شماره ثبت ۱۵۵۷۰۵۰۶). کمک مالی شما در صورت اعمال قابل کسر از مالیات است.",
+      "توانمندسازی فراتر از مرزها یک خیریه ثبت شده است. کمک مالی شما در صورت اعمال قابل کسر از مالیات است.",
     "donate.donationType": "نوع کمک مالی",
     "donate.creditDebitCard": "کارت اعتباری/نقدی",
     "donate.paypal": "پی‌پال",
@@ -514,13 +518,14 @@ const translations:any = {
     "footer.volunteer": "داوطلب",
     "footer.partner": "شریک",
     "footer.newsletter": "خبرنامه",
-    "footer.copyright": "© ۲۰۲۵ توانمندسازی فراتر از مرزها. تمام حقوق محفوظ است.",
+    "footer.copyright": " ۲۰۲۵ توانمندسازی فراتر از مرزها. تمام حقوق محفوظ است.",
     "footer.privacy": "سیاست حفظ حریم خصوصی",
     "footer.terms": "شرایط خدمات",
   },
 
   ps: {
     // Header - Pashto
+    "header.home": "کور",
     "header.about": "زموږ په اړه",
     "header.programs": "پروګرامونه",
     "header.news": "خبرونه",
@@ -530,7 +535,7 @@ const translations:any = {
     "header.contact": "اړیکه",
     "header.donate": "مرسته وکړئ",
     "header.orgName": "د پولو څخه هاخوا پیاوړتیا",
-    "header.regNumber": "د ثبت شمیره: ۱۵۵۷۰۵۰۶",
+    "header.regNumber": "",
 
     // Hero Section
     "hero.badge": "د ۲۰۲۳ څخه راهیسې ثبت شوې غیر دولتي موسسه",
@@ -541,6 +546,7 @@ const translations:any = {
       "د پولو څخه هاخوا پیاوړتیا د بشري حقونو ته وده ورکولو، د روغتیایي شرایطو ښه کولو، او په زیان منونکو سیمو کې زده کړو ته د لاسرسي چمتو کولو ته وقف دی، په افغانستان کې د میرمنو او نجونو پیاوړتیا ته ځانګړې پاملرنه سره.",
     "hero.supportMission": "زموږ د ماموریت ملاتړ وکړئ",
     "hero.getInvolved": "ګډون وکړئ",
+    "hero.learnMore": "ډېر څه زده کړئ",
     "hero.livesImpacted": "اغیزمن شوي ژوندونه",
 
     // About Section
@@ -685,7 +691,7 @@ const translations:any = {
     "donate.completeDonation": "مرسته بشپړه کړئ",
     "donate.secureEncrypted": "ستاسو مرسته خوندي او کوډ شوې ده",
     "donate.taxDeductible":
-      "د پولو څخه هاخوا پیاوړتیا یوه ثبت شوې خیریه اداره ده (د ثبت شمیره 15570506). ستاسو مرسته د مالیې وړ ده چیرې چې پلي کیږي.",
+      "د پولو څخه هاخوا پیاوړتیا یوه ثبت شوې خیریه اداره ده. ستاسو مرسته د مالیې وړ ده چیرې چې پلي کیږي.",
     "donate.donationType": "د مرستې ډول",
     "donate.creditDebitCard": "د کریډیټ / ډیبیټ کارت",
     "donate.paypal": "پی پال",
@@ -763,7 +769,7 @@ const translations:any = {
     "footer.volunteer": "رضاکار",
     "footer.partner": "شریک",
     "footer.newsletter": "خبر پاڼه",
-    "footer.copyright": "© 2025 د پولو څخه هاخوا پیاوړتیا. ټول حقونه خوندي دي.",
+    "footer.copyright": " 2025 د پولو څخه هاخوا پیاوړتیا. ټول حقونه خوندي دي.",
     "footer.privacy": "د محرمیت پالیسي",
     "footer.terms": "د خدماتو شرایط",
   },

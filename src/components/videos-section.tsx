@@ -5,8 +5,40 @@ import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Play, ChevronRight, Eye, Clock, Share2, X } from "lucide-react"
+import { Play, ChevronRight, Eye, Clock, Share2, X, ChevronDown } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
+import { images, getImage } from "@/config/images"
+
+export function IntroSection() {
+  const { isRTL } = useLanguage()
+  return (
+    <section className="py-12 md:py-16 lg:py-20 bg-white">
+      <div className="container mx-auto px-4">
+        <div className={`grid lg:grid-cols-2 gap-8 lg:gap-12 items-start ${isRTL ? "lg:grid-flow-col-dense" : ""}`}>
+          <div className={isRTL ? "lg:order-2 text-right" : "lg:order-1"}>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Beyond Borders Empowerment</h2>
+            <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+              We are dedicated to empowering girls and helping communities through education, healthcare, and
+              economic opportunity. Our programs span virtual learning, on‑ground schools, mobile health clinics,
+              and targeted humanitarian support.
+            </p>
+          </div>
+          <div className={isRTL ? "lg:order-1" : "lg:order-2"}>
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-black">
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="Orphanage Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
 
 export function VideosSection() {
   const { t, isRTL } = useLanguage()
@@ -17,7 +49,7 @@ export function VideosSection() {
     {
       id: 1,
       title: "Virtual Education Project Launch Event - London 2025",
-      thumbnail: "/placeholder.png",
+      thumbnail: images.videos.featured,
       duration: "15:32",
       views: "2.1K",
       description:
@@ -27,7 +59,7 @@ export function VideosSection() {
     {
       id: 2,
       title: "Student Success Stories - Fatima's Journey",
-      thumbnail: "/placeholder.png",
+      thumbnail: images.videos.video1,
       duration: "8:45",
       views: "1.8K",
       description:
@@ -36,7 +68,7 @@ export function VideosSection() {
     {
       id: 3,
       title: "On-Ground Schools: Hope, Commitment & Change",
-      thumbnail: "/placeholder.png",
+      thumbnail: images.videos.video2,
       duration: "12:20",
       views: "3.2K",
       description:
@@ -45,7 +77,7 @@ export function VideosSection() {
     {
       id: 4,
       title: "Orphanage Visit - Bringing Joy and Education",
-      thumbnail: "/placeholder.png",
+      thumbnail: images.videos.video3,
       duration: "6:15",
       views: "1.5K",
       description:
@@ -54,7 +86,7 @@ export function VideosSection() {
     {
       id: 5,
       title: "Women's Entrepreneurship Training Program",
-      thumbnail: "/placeholder.png",
+      thumbnail: images.videos.video4,
       duration: "10:30",
       views: "2.7K",
       description: "See how our business training programs are empowering women to start their own enterprises.",
@@ -62,7 +94,7 @@ export function VideosSection() {
     {
       id: 6,
       title: "Mobile Health Clinic in Action",
-      thumbnail: "/placeholder.png",
+      thumbnail: images.videos.video5,
       duration: "7:55",
       views: "1.9K",
       description: "Our mobile health clinic providing essential medical care in remote communities.",
@@ -92,7 +124,7 @@ export function VideosSection() {
                     onClick={() => setSelectedVideo(featuredVideo.id.toString())}
                   >
                     <Image
-                      src={featuredVideo.thumbnail || "/placeholder.png"}
+                      src={getImage(featuredVideo.thumbnail)}
                       alt={featuredVideo.title}
                       width={800}
                       height={450}
@@ -133,13 +165,18 @@ export function VideosSection() {
                     </div>
                     <div className={`flex flex-col sm:flex-row gap-3 ${isRTL ? "sm:flex-row-reverse" : ""}`}>
                       <Button
-                        className="bg-red-600 hover:bg-red-700 text-white text-sm md:text-base"
+                        variant="destructive"
+                        size="sm"
                         onClick={() => setSelectedVideo(featuredVideo.id.toString())}
+                        leftIcon={<Play className="h-3 w-3 md:h-4 md:w-4" />}
                       >
-                        <Play className={`h-3 w-3 md:h-4 md:w-4 ${isRTL ? "ml-2" : "mr-2"}`} />
                         {t("videos.watchNow")}
                       </Button>
-                      <Button variant="outline" size="sm" className="text-sm md:text-base bg-transparent">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-gray-300 text-gray-700"
+                      >
                         <Share2 className="h-3 w-3 md:h-4 md:w-4" />
                       </Button>
                     </div>
@@ -155,12 +192,10 @@ export function VideosSection() {
                 <Button
                   variant="ghost"
                   onClick={() => setShowAllVideos(!showAllVideos)}
-                  className="text-red-600 hover:text-red-700 text-sm md:text-base"
+                  className="text-blue-600 hover:text-blue-700"
                 >
-                  {showAllVideos ? t("videos.showLess") : t("videos.viewAll")}
-                  <ChevronRight
-                    className={`h-3 w-3 md:h-4 md:w-4 transition-transform ${showAllVideos ? "rotate-90" : ""} ${isRTL ? "mr-1" : "ml-1"}`}
-                  />
+                  {showAllVideos ? t("common.showLess") : t("common.showMore")}
+                  <ChevronDown className={`h-4 w-4 ml-1 transition-transform ${showAllVideos ? "rotate-180" : ""}`} />
                 </Button>
               </div>
 
@@ -177,7 +212,7 @@ export function VideosSection() {
                   >
                     <div className="relative overflow-hidden">
                       <Image
-                        src={video.thumbnail || "/placeholder.png"}
+                        src={getImage(video.thumbnail)}
                         alt={video.title}
                         width={350}
                         height={200}

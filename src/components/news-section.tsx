@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Calendar, Clock, ArrowRight, ChevronRight, X, Share2, BookOpen, Eye, Heart } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 import { useState, useEffect } from "react"
+import { images, getImage } from "@/config/images"
+import { InlineImageUpload } from "@/components/inline-image-upload"
 
 export function NewsSection() {
   const { t, isRTL } = useLanguage()
@@ -15,11 +17,34 @@ export function NewsSection() {
   const [showAllArticles, setShowAllArticles] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [animateCards, setAnimateCards] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [newsImages, setNewsImages] = useState<Record<number, string>>({
+    1: images.news.featured,
+    2: images.news.article1,
+    3: images.news.article2,
+    4: images.news.article3,
+    5: images.news.article4,
+    6: images.news.article5,
+  })
 
   // Trigger card animations on mount
   useEffect(() => {
     const timer = setTimeout(() => setAnimateCards(true), 100)
     return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsAdmin(new URLSearchParams(window.location.search).get("admin") === "1")
+      setNewsImages((prev) => ({
+        1: localStorage.getItem("news_image_1") || prev[1],
+        2: localStorage.getItem("news_image_2") || prev[2],
+        3: localStorage.getItem("news_image_3") || prev[3],
+        4: localStorage.getItem("news_image_4") || prev[4],
+        5: localStorage.getItem("news_image_5") || prev[5],
+        6: localStorage.getItem("news_image_6") || prev[6],
+      }))
+    }
   }, [])
 
   const newsArticles = [
@@ -28,7 +53,7 @@ export function NewsSection() {
       title: "Virtual Education Project Reaches 200+ Students Across Afghanistan",
       excerpt:
         "Our virtual education initiative has successfully expanded to serve over 200 Afghan girls and women across 24 provinces, providing them with essential English and computer skills.",
-      image: "/placeholder.svg?height=400&width=600",
+      image: newsImages[1],
       date: "March 15, 2025",
       category: t("news.education"),
       readTime: "3",
@@ -42,7 +67,7 @@ export function NewsSection() {
       title: "New Partnership with International Education Foundation",
       excerpt:
         "BBE announces strategic partnership to provide certified high school education and university preparation programs for Afghan students.",
-      image: "/placeholder.svg?height=400&width=600",
+      image: newsImages[2],
       date: "March 10, 2025",
       category: t("news.partnership"),
       readTime: "2",
@@ -56,7 +81,7 @@ export function NewsSection() {
       title: "Mobile Health Clinics Launch in Remote Areas",
       excerpt:
         "Our first mobile health clinic begins operations in underserved communities, providing essential medical care and mental health support.",
-      image: "/placeholder.svg?height=400&width=600",
+      image: newsImages[3],
       date: "March 8, 2025",
       category: t("news.healthcare"),
       readTime: "4",
@@ -70,7 +95,7 @@ export function NewsSection() {
       title: "Coding Bootcamp Graduates First Cohort",
       excerpt:
         "25 young women complete our intensive coding and cybersecurity program, with 80% securing remote work opportunities.",
-      image: "/placeholder.svg?height=400&width=600",
+      image: newsImages[4],
       date: "March 5, 2025",
       category: t("news.skillsTraining"),
       readTime: "3",
@@ -84,7 +109,7 @@ export function NewsSection() {
       title: "Emergency Relief Reaches 500 Families",
       excerpt:
         "BBE's emergency response team provides food, shelter, and medical supplies to families affected by recent natural disasters.",
-      image: "/placeholder.svg?height=400&width=600",
+      image: newsImages[5],
       date: "March 1, 2025",
       category: t("news.emergencyAid"),
       readTime: "2",
@@ -98,7 +123,7 @@ export function NewsSection() {
       title: "Women's Entrepreneurship Program Shows Remarkable Success",
       excerpt:
         "Over 100 women have started their own businesses through our entrepreneurship training, generating sustainable income for their families.",
-      image: "/placeholder.svg?height=400&width=600",
+      image: newsImages[6],
       date: "February 28, 2025",
       category: t("news.economicEmpowerment"),
       readTime: "5",
@@ -161,13 +186,22 @@ export function NewsSection() {
             <div className={`grid lg:grid-cols-2 gap-0 ${isRTL ? "lg:grid-flow-col-dense" : ""}`}>
               <div className={`relative order-2 lg:order-1 ${isRTL ? "lg:order-2" : ""} overflow-hidden`}>
                 <Image
-                  src={featuredArticle.image || "/placeholder.svg"}
+                  src={getImage(featuredArticle.image)}
                   alt={featuredArticle.title}
                   width={600}
                   height={400}
                   className="w-full h-64 md:h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                {isAdmin && (
+                  <div className={`absolute bottom-4 ${isRTL ? "right-4" : "left-4"}`}>
+                    <InlineImageUpload
+                      label="Change featured image"
+                      storageKey={`news_image_${featuredArticle.id}`}
+                      onUploaded={(url) => setNewsImages((prev) => ({ ...prev, [featuredArticle.id]: url }))}
+                    />
+                  </div>
+                )}
 
                 {/* Floating badges */}
                 <div className={`absolute top-4 ${isRTL ? "right-4" : "left-4"} flex flex-col gap-2`}>
@@ -234,16 +268,16 @@ export function NewsSection() {
 
                 <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <Button
-                    className="bg-red-600 hover:bg-red-700 text-white text-sm md:text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                    variant="destructive"
                     onClick={() => handleArticleClick(featuredArticle)}
+                    rightIcon={<ArrowRight className="h-3 w-3 md:h-4 md:w-4" />}
                   >
                     {t("news.readFull")}
-                    <ArrowRight className={`h-3 w-3 md:h-4 md:w-4 ${isRTL ? "mr-2" : "ml-2"}`} />
                   </Button>
                   <Button
                     variant="outline"
-                    size="sm"
-                    className="text-sm md:text-base hover:scale-105 transition-transform bg-transparent"
+                    size="icon"
+                    className="border-gray-300 text-gray-700"
                   >
                     <Share2 className="h-3 w-3 md:h-4 md:w-4" />
                   </Button>
@@ -264,20 +298,16 @@ export function NewsSection() {
               variant="ghost"
               onClick={handleViewAll}
               disabled={isLoading}
-              className="text-red-600 hover:text-red-700 text-sm md:text-base hover:bg-red-50 transition-all"
+              className="text-blue-600 hover:text-blue-700"
+              rightIcon={
+                <ChevronRight
+                  className={`h-4 w-4 transition-transform ${
+                    showAllArticles ? (isRTL ? "rotate-180" : "rotate-180") : isRTL ? "rotate-180" : ""
+                  }`}
+                />
+              }
             >
-              {isLoading ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-red-600 border-t-transparent"></div>
-              ) : (
-                <>
-                  {showAllArticles ? t("news.showLess") : t("news.viewAll")}
-                  <ChevronRight
-                    className={`h-3 w-3 md:h-4 md:w-4 transition-transform duration-300 ${
-                      showAllArticles ? "rotate-90" : ""
-                    } ${isRTL ? "mr-1" : "ml-1"}`}
-                  />
-                </>
-              )}
+              {showAllArticles ? t("common.showLess") : t("common.viewAll")}
             </Button>
           </div>
 
@@ -293,13 +323,22 @@ export function NewsSection() {
               >
                 <div className="relative overflow-hidden">
                   <Image
-                    src={article.image || "/placeholder.svg"}
+                    src={getImage(article.image)}
                     alt={article.title}
                     width={400}
                     height={250}
                     className="w-full h-40 md:h-48 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  {isAdmin && (
+                    <div className={`absolute bottom-3 ${isRTL ? "right-3" : "left-3"}`}>
+                      <InlineImageUpload
+                        label="Change image"
+                        storageKey={`news_image_${article.id}`}
+                        onUploaded={(url) => setNewsImages((prev) => ({ ...prev, [article.id]: url }))}
+                      />
+                    </div>
+                  )}
 
                   {/* Category badge */}
                   <div className={`absolute top-3 ${isRTL ? "right-3" : "left-3"}`}>
@@ -363,13 +402,18 @@ export function NewsSection() {
 
                   <div className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
                     <Button
-                      variant="ghost"
-                      className="text-red-600 hover:text-red-700 p-0 text-sm md:text-base group-hover:translate-x-1 transition-transform"
+                      variant="link"
+                      className="text-blue-600 p-0 hover:no-underline group-hover:translate-x-1 transition-transform"
+                      onClick={() => handleArticleClick(article)}
                     >
                       {t("news.readMore")}
-                      <ChevronRight className={`h-3 w-3 md:h-4 md:w-4 ${isRTL ? "mr-1" : "ml-1"}`} />
+                      <ChevronRight className="h-3 w-3 md:h-4 md:w-4 ml-1" />
                     </Button>
-                    <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
+                    >
                       <Share2 className="h-3 w-3" />
                     </Button>
                   </div>
@@ -421,7 +465,7 @@ export function NewsSection() {
               <div className="overflow-y-auto max-h-[calc(90vh-120px)]">
                 <div className="relative">
                   <Image
-                    src={selectedArticle.image || "/placeholder.svg"}
+                    src={getImage(selectedArticle.image)}
                     alt={selectedArticle.title}
                     width={800}
                     height={400}
@@ -566,12 +610,17 @@ export function NewsSection() {
 
                   {/* Action buttons */}
                   <div className={`flex gap-3 mt-8 pt-6 border-t ${isRTL ? "flex-row-reverse" : ""}`}>
-                    <Button className="bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl transition-all">
-                      <Heart className={`h-4 w-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+                    <Button
+                      variant="destructive"
+                      leftIcon={<Heart className="h-4 w-4" />}
+                    >
                       {t("news.likeArticle")}
                     </Button>
-                    <Button variant="outline" className="hover:bg-blue-50 bg-transparent">
-                      <Share2 className={`h-4 w-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+                    <Button
+                      variant="outline"
+                      className="border-gray-300 text-gray-700"
+                      leftIcon={<Share2 className="h-4 w-4" />}
+                    >
                       {t("news.shareArticle")}
                     </Button>
                   </div>

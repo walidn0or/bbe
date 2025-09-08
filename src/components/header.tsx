@@ -17,6 +17,7 @@ export function Header({ activeSection, scrollToSection }: HeaderProps) {
   const { t, isRTL } = useLanguage()
 
   const navigationItems = [
+    { name: t("header.home"), id: "home" },
     { name: t("header.about"), id: "about" },
     { name: t("header.programs"), id: "programs" },
     { name: t("header.news"), id: "news" },
@@ -25,7 +26,11 @@ export function Header({ activeSection, scrollToSection }: HeaderProps) {
   ]
 
   const handleNavClick = (sectionId: string) => {
-    scrollToSection(sectionId)
+    if (sectionId === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    } else {
+      scrollToSection(sectionId)
+    }
     setMobileMenuOpen(false)
   }
 
@@ -39,17 +44,16 @@ export function Header({ activeSection, scrollToSection }: HeaderProps) {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <Image
-              src="/bbe-logo.png"
+              src="/images/Beyond-Borders-Empowerment-logo-PNG.svg"
               alt="Beyond Borders Empowerment Logo"
-              width={50}
-              height={50}
-              className="md:w-[60px] md:h-[60px] rounded-full shadow-md transition-transform hover:scale-105"
+              width={60}
+              height={60}
+              className="md:w-[60px] md:h-[60px] rounded-none shadow-md transition-transform hover:scale-105"
             />
             <div className="min-w-0">
               <h1 className={`text-sm md:text-xl font-bold text-gray-900 truncate ${isRTL ? "text-right" : ""}`}>
                 {t("header.orgName")}
               </h1>
-              <p className={`text-xs md:text-sm text-gray-600 ${isRTL ? "text-right" : ""}`}>{t("header.regNumber")}</p>
             </div>
           </div>
 
@@ -58,15 +62,16 @@ export function Header({ activeSection, scrollToSection }: HeaderProps) {
             {navigationItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`text-gray-700 hover:text-red-600 transition-all duration-300 font-medium relative group text-sm xl:text-base focus:outline-none ${
-                  activeSection === item.id ? "text-red-600" : ""
+                onClick={() => handleNavClick(item.id)}
+                aria-current={activeSection === item.id ? "page" : undefined}
+                className={`group text-gray-700 transition-colors duration-200 font-medium relative text-sm xl:text-base focus:outline-none ${
+                  activeSection === item.id ? "text-red-600" : "hover:text-red-600"
                 }`}
               >
                 {item.name}
                 <span
-                  className={`absolute -bottom-1 ${isRTL ? "right-0" : "left-0"} w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full ${
-                    activeSection === item.id ? "w-full" : ""
+                  className={`absolute -bottom-1 ${isRTL ? "right-0" : "left-0"} h-0.5 bg-red-600 transition-all duration-200 ${
+                    activeSection === item.id ? "w-full" : "w-0 group-hover:w-full"
                   }`}
                 ></span>
               </button>

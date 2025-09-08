@@ -1,12 +1,27 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
+import { useState, useEffect } from "react"
+import { InlineImageUpload } from "@/components/inline-image-upload"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Target, Lightbulb, BookOpen, Users, Globe, Shield, Award, Heart } from "lucide-react"
+import { Target, Lightbulb, BookOpen, Users, Globe, Shield, Award, Heart, Upload } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
+import { Button } from "@/components/ui/button"
+import { images, getImage } from "@/config/images"
 
 export function AboutSection() {
   const { t, isRTL } = useLanguage()
+  const [aboutImg, setAboutImg] = useState<string>(images.about.main)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("about_image_url")
+      if (stored) setAboutImg(stored)
+      setIsAdmin(new URLSearchParams(window.location.search).get("admin") === "1")
+    }
+  }, [])
 
   const coreValues = [
     {
@@ -14,35 +29,35 @@ export function AboutSection() {
       description: t("about.inclusivenessDesc"),
       icon: Users,
       color: "red",
-      image: "/placeholder.png",
+      image: images.about.values.inclusiveness,
     },
     {
       title: t("about.sustainability"),
       description: t("about.sustainabilityDesc"),
       icon: Globe,
       color: "green",
-      image: "/placeholder.png",
+      image: images.about.values.sustainability,
     },
     {
       title: t("about.accountability"),
       description: t("about.accountabilityDesc"),
       icon: Shield,
       color: "blue",
-      image: "/placeholder.png",
+      image: images.about.values.accountability,
     },
     {
       title: t("about.empowerment"),
       description: t("about.empowermentDesc"),
       icon: Award, // replaced HandHeart with Award
       color: "purple",
-      image: "/placeholder.png",
+      image: images.about.values.empowerment,
     },
     {
       title: t("about.dignity"),
       description: t("about.dignityDesc"),
       icon: Heart,
       color: "pink",
-      image: "/placeholder.png",
+      image: images.about.values.dignity,
     },
   ]
 
@@ -53,7 +68,7 @@ export function AboutSection() {
         <div className="container mx-auto px-4">
           <div className={`text-center mb-12 md:mb-16 ${isRTL ? "text-right" : ""}`}>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{t("about.title")}</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-red-600 to-blue-600 mx-auto mb-6"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-red-600 to-blue-600 mx-auto mb-10"></div>
             <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">{t("about.subtitle")}</p>
           </div>
 
@@ -62,13 +77,50 @@ export function AboutSection() {
             className={`grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16 lg:mb-20 ${isRTL ? "lg:grid-flow-col-dense" : ""}`}
           >
             <div className={`relative order-2 lg:order-1 ${isRTL ? "lg:order-2" : ""}`}>
-              <Image
-                src="/placeholder.png"
-                alt="Our team working with communities"
-                width={600}
-                height={500}
-                className="rounded-2xl shadow-xl w-full h-auto"
-              />
+              {/* ========== ABOUT IMAGE UPLOAD SECTION ========== */}
+              {/* 
+                To update the about section images:
+                
+                1. Main About Image:
+                   - Location: public/images/about/
+                   - Recommended size: 1200x800px (3:2 ratio)
+                   - Update path in: src/config/images.ts -> about.main
+
+                2. Team Member Images:
+                   - Location: public/images/about/team/
+                   - Recommended size: 500x500px (1:1 ratio)
+                   - Naming: team-member-{number}.jpg (e.g., team-member-1.jpg)
+
+                3. Core Value Icons:
+                   - Location: public/images/about/values/
+                   - Recommended size: 200x200px (1:1 ratio)
+                   - Naming: {value-name}.jpg (e.g., inclusiveness.jpg)
+              */}
+              <div className="relative h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden shadow-lg group">
+                <Image
+                  src={getImage(aboutImg)}
+                  alt={t("about.imageAlt")}
+                  fill
+                  className="object-cover object-center"
+                />
+                {isAdmin && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <InlineImageUpload
+                      onUpload={(url) => {
+                        setAboutImg(url);
+                        if (typeof window !== 'undefined') {
+                          localStorage.setItem('about_image_url', url);
+                        }
+                      }}
+                      className="bg-white/90 hover:bg-white text-red-600 px-4 py-2 rounded-full flex items-center shadow-lg"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      {t('common.changeImage')}
+                    </InlineImageUpload>
+                  </div>
+                )}
+              </div>
+              {/* ========== END ABOUT IMAGE UPLOAD SECTION ========== */}
               <div
                 className={`absolute -top-2 ${isRTL ? "-left-2 md:-left-4" : "-right-2 md:-right-4"} md:-top-4 bg-red-600 text-white p-3 md:p-4 rounded-xl shadow-lg`}
               >
@@ -79,29 +131,47 @@ export function AboutSection() {
               <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">{t("about.storyTitle")}</h3>
               <p className="text-gray-700 mb-4 md:mb-6 leading-relaxed">{t("about.storyText1")}</p>
               <p className="text-gray-700 mb-4 md:mb-6 leading-relaxed">{t("about.storyText2")}</p>
-              <div className={`flex items-center space-x-4 ${isRTL ? "flex-row-reverse space-x-reverse" : ""}`}>
+              <div className={`${isRTL ? "text-right" : ""}`}>
+                <Link href="/about/background">
+                  <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg transition-all duration-300 hover:scale-105 text-sm md:text-base px-6 md:px-7 py-3">
+                    Learn more about our background
+                  </Button>
+                </Link>
+              </div>
+              <div className={`flex items-center space-x-4 ${isRTL ? "flex-row-reverse space-x-reverse" : ""} mt-6`}>
                 <div className={`flex ${isRTL ? "-space-x-2 flex-row-reverse" : "-space-x-2"}`}>
+                  {/* ========== TEAM MEMBER IMAGES UPLOAD SECTION ========== */}
+                  {/* 
+                    To update team member images:
+                    1. Replace images in: public/images/about/team/
+                    2. Recommended size: 500x500px (1:1 ratio - square)
+                    3. File names: team-member-1.jpg, team-member-2.jpg, team-member-3.jpg
+                    4. Update paths in: src/config/images.ts -> about.team
+                    5. For best results: Professional headshots, good lighting
+                    6. Format: JPG or PNG, compressed to under 200KB each
+                  */}
                   <Image
-                    src="/placeholder.svg?height=40&width=40"
-                    alt="Team member"
+                    src={images.about.team.member1}
+                    alt="Team member 1"
                     width={40}
                     height={40}
-                    className="rounded-full border-2 border-white w-8 h-8 md:w-10 md:h-10"
+                    className="rounded-full border-2 border-white w-8 h-8 md:w-10 md:h-10 hover:scale-110 transition-transform duration-200"
                   />
                   <Image
-                    src="/placeholder.svg?height=40&width=40"
-                    alt="Team member"
+                    src={images.about.team.member2}
+                    alt="Team member 2"
                     width={40}
                     height={40}
-                    className="rounded-full border-2 border-white w-8 h-8 md:w-10 md:h-10"
+                    className="rounded-full border-2 border-white w-8 h-8 md:w-10 md:h-10 hover:scale-110 transition-transform duration-200"
                   />
                   <Image
-                    src="/placeholder.svg?height=40&width=40"
-                    alt="Team member"
+                    src={images.about.team.member3}
+                    alt="Team member 3"
                     width={40}
                     height={40}
-                    className="rounded-full border-2 border-white w-8 h-8 md:w-10 md:h-10"
+                    className="rounded-full border-2 border-white w-8 h-8 md:w-10 md:h-10 hover:scale-110 transition-transform duration-200"
                   />
+                  {/* ========== END TEAM MEMBER IMAGES UPLOAD SECTION ========== */}
                 </div>
                 <p className="text-sm text-gray-600">{t("about.teamText")}</p>
               </div>
@@ -163,7 +233,7 @@ export function AboutSection() {
               >
                 <div className="relative overflow-hidden rounded-t-lg">
                   <Image
-                    src={value.image || "/placeholder.png"}
+                    src={getImage(value.image)}
                     alt={value.title}
                     width={300}
                     height={200}

@@ -1,12 +1,38 @@
 "use client"
 
 import Image from "next/image"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { GraduationCap, Stethoscope, Users, Heart, Globe, Award } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
+import { images, getImage } from "@/config/images"
+import { InlineImageUpload } from "@/components/inline-image-upload"
 
 export function ProgramsSection() {
   const { t, isRTL } = useLanguage()
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [programImages, setProgramImages] = useState({
+    education: images.programs.education,
+    healthcare: images.programs.healthcare,
+    economic: images.programs.economic,
+    orphans: images.programs.orphans,
+    rights: images.programs.rights,
+    emergency: images.programs.emergency,
+  })
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsAdmin(new URLSearchParams(window.location.search).get("admin") === "1")
+      setProgramImages((prev) => ({
+        education: localStorage.getItem("programs_education_image_url") || prev.education,
+        healthcare: localStorage.getItem("programs_healthcare_image_url") || prev.healthcare,
+        economic: localStorage.getItem("programs_economic_image_url") || prev.economic,
+        orphans: localStorage.getItem("programs_orphans_image_url") || prev.orphans,
+        rights: localStorage.getItem("programs_rights_image_url") || prev.rights,
+        emergency: localStorage.getItem("programs_emergency_image_url") || prev.emergency,
+      }))
+    }
+  }, [])
 
   const programs = [
     {
@@ -14,7 +40,8 @@ export function ProgramsSection() {
       description: t("programs.educationDesc"),
       icon: GraduationCap,
       color: "blue",
-      image: "/placeholder.png",
+      key: "education" as const,
+      image: programImages.education,
       features: [
         t("programs.virtualClasses"),
         t("programs.onGroundSchools"),
@@ -27,7 +54,8 @@ export function ProgramsSection() {
       description: t("programs.healthcareDesc"),
       icon: Stethoscope,
       color: "green",
-      image: "/placeholder.png",
+      key: "healthcare" as const,
+      image: programImages.healthcare,
       features: [
         t("programs.mobileHealthClinics"),
         t("programs.mentalHealthCounseling"),
@@ -40,7 +68,8 @@ export function ProgramsSection() {
       description: t("programs.economicDesc"),
       icon: Users,
       color: "purple",
-      image: "/placeholder.png",
+      key: "economic" as const,
+      image: programImages.economic,
       features: [
         t("programs.businessTraining"),
         t("programs.microfinanceAccess"),
@@ -53,7 +82,8 @@ export function ProgramsSection() {
       description: t("programs.orphansDesc"),
       icon: Heart,
       color: "red",
-      image: "/placeholder.png",
+      key: "orphans" as const,
+      image: programImages.orphans,
       features: [
         t("programs.educationalSupport"),
         t("programs.nutritionalPrograms"),
@@ -66,7 +96,8 @@ export function ProgramsSection() {
       description: t("programs.rightsDesc"),
       icon: Globe,
       color: "orange",
-      image: "/placeholder.png",
+      key: "rights" as const,
+      image: programImages.rights,
       features: [
         t("programs.rightsWorkshops"),
         t("programs.documentationEfforts"),
@@ -79,7 +110,8 @@ export function ProgramsSection() {
       description: t("programs.emergencyDesc"),
       icon: Award, // replaced HandHeart with Award
       color: "yellow",
-      image: "/placeholder.png",
+      key: "emergency" as const,
+      image: programImages.emergency,
       features: [
         t("programs.foodShelter"),
         t("programs.medicalSupplies"),
@@ -105,13 +137,24 @@ export function ProgramsSection() {
             >
               <div className="relative overflow-hidden">
                 <Image
-                  src={program.image || "/placeholder.png"}
+                  src={getImage(program.image)}
                   alt={program.title}
                   width={400}
                   height={250}
                   className="w-full h-40 md:h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                {isAdmin && (
+                  <div className={`absolute bottom-3 ${isRTL ? "right-3" : "left-3"}`}>
+                    <InlineImageUpload
+                      label="Change program image"
+                      storageKey={`programs_${program.key}_image_url`}
+                      onUploaded={(url) =>
+                        setProgramImages((prev) => ({ ...prev, [program.key]: url }))
+                      }
+                    />
+                  </div>
+                )}
                 <div
                   className={`absolute top-3 ${isRTL ? "right-3 md:right-4" : "left-3 md:left-4"} md:top-4 w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center shadow-lg ${
                     program.color === "blue"

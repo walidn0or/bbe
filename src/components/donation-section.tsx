@@ -135,7 +135,21 @@ export function DonationSection() {
                 </div>
               )}
               <CardContent className="p-6 md:p-8 text-center">
-                <item.icon className={`h-10 w-10 mx-auto mb-4 text-${item.color}-600`} />
+                <item.icon
+                  className={`h-10 w-10 mx-auto mb-4 ${
+                    item.color === "blue"
+                      ? "text-blue-600"
+                      : item.color === "green"
+                        ? "text-green-600"
+                        : item.color === "purple"
+                          ? "text-purple-600"
+                          : item.color === "red"
+                            ? "text-red-600"
+                            : item.color === "pink"
+                              ? "text-pink-600"
+                              : "text-gray-600"
+                  }`}
+                />
                 <div className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{item.amount}</div>
                 <div className="text-gray-600 text-sm md:text-base mb-4">{item.impact}</div>
                 <Button

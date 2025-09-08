@@ -2,6 +2,103 @@
 
 import Image from "next/image"
 import { useLanguage } from "@/contexts/language-context"
+import { Button } from "@/components/ui/button"
+import { Facebook, Instagram, Linkedin, Youtube, MessageCircle } from "lucide-react"
+import { motion } from "framer-motion"
+
+const socialLinks = [
+  {
+    name: "Facebook",
+    url: "https://www.facebook.com/share/1BgHmLx9PT/?mibextid=wwXIfr",
+    icon: Facebook,
+    color: "#1877F2",
+    hoverColor: "#166FE5"
+  },
+  {
+    name: "Instagram",
+    url: "https://www.instagram.com/beyondbordersempowerment?igsh=MTdmOGgyazY4MG02eg%3D%3D&utm_source=qr",
+    icon: Instagram,
+    color: "#E4405F",
+    hoverColor: "#D42D6D"
+  },
+  {
+    name: "WhatsApp",
+    url: "https://chat.whatsapp.com/F05juiisyoi0S99QRf40I7",
+    icon: MessageCircle,
+    color: "#25D366",
+    hoverColor: "#128C7E"
+  },
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/company/beyond-borders-empowerment/",
+    icon: Linkedin,
+    color: "#0A66C2",
+    hoverColor: "#004182"
+  },
+  {
+    name: "YouTube",
+    url: "#",
+    icon: Youtube,
+    color: "#FF0000",
+    hoverColor: "#CC0000"
+  }
+]
+
+export function SocialLinks() {
+  return (
+    <section className="py-10 bg-white">
+      <div className="container mx-auto px-4">
+        <motion.div 
+          className="flex items-center justify-center gap-4 md:gap-6"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          {socialLinks.map((social, index) => (
+            <motion.div
+              key={social.name}
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ 
+                duration: 0.4,
+                delay: index * 0.1,
+                type: "spring",
+                stiffness: 100
+              }}
+              whileHover={{ 
+                y: -5,
+                scale: 1.1,
+                transition: { duration: 0.2 }
+              }}
+            >
+              <Button 
+                asChild 
+                variant="ghost" 
+                className="p-3 rounded-full transition-all duration-300"
+                style={{
+                  backgroundColor: `${social.color}15`,
+                  color: social.color,
+                }}
+              >
+                <a 
+                  href={social.url} 
+                  aria-label={social.name} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:bg-transparent"
+                >
+                  <social.icon className="h-6 w-6" />
+                </a>
+              </Button>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  )
+}
 
 interface FooterProps {
   scrollToSection: (sectionId: string) => void
@@ -19,102 +116,126 @@ export function Footer({ scrollToSection }: FooterProps) {
   ]
 
   return (
-    <footer className="bg-black text-white py-8 md:py-12">
+    <motion.footer 
+      className="bg-black text-white py-8 md:py-12"
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+    >
       <div className="container mx-auto px-4">
         <div className={`grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8 ${isRTL ? "text-right" : ""}`}>
-          <div className="md:col-span-2">
+          <motion.div 
+            className="md:col-span-2"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
             <div
               className={`flex items-center space-x-3 md:space-x-4 mb-4 md:mb-6 cursor-pointer ${isRTL ? "flex-row-reverse space-x-reverse" : ""}`}
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             >
-              <Image
-                src="/bbe-logo.png"
-                alt="Beyond Borders Empowerment"
-                width={40}
-                height={40}
-                className="md:w-[50px] md:h-[50px] rounded-full transition-transform hover:scale-105"
-              />
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <Image
+                  src="/bbe-logo.png"
+                  alt="Beyond Borders Empowerment"
+                  width={50}
+                  height={50}
+                  className="rounded-full"
+                />
+              </motion.div>
               <div>
                 <p className="font-bold text-base md:text-lg">{t("header.orgName")}</p>
                 <p className="text-xs md:text-sm opacity-75">{t("footer.tagline")}</p>
               </div>
             </div>
-            <p className="text-gray-400 mb-3 md:mb-4 leading-relaxed text-sm md:text-base">{t("footer.description")}</p>
-            <p className="text-xs md:text-sm text-gray-500">{t("header.regNumber")}</p>
-          </div>
-          <div>
+            <p className="text-gray-400 mb-3 md:mb-4 leading-relaxed text-sm md:text-base">
+              {t("footer.description")}
+            </p>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+          >
             <h4 className="font-bold mb-3 md:mb-4 text-sm md:text-base">{t("footer.quickLinks")}</h4>
             <ul className="space-y-1 md:space-y-2 text-xs md:text-sm">
-              {navigationItems.map((item) => (
-                <li key={item.id}>
+              {navigationItems.map((item, index) => (
+                <motion.li 
+                  key={item.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: 0.2 + (index * 0.05) }}
+                  whileHover={{ x: 5 }}
+                >
                   <button
                     onClick={() => scrollToSection(item.id)}
                     className={`text-gray-400 hover:text-white transition-colors ${isRTL ? "text-right" : "text-left"}`}
                   >
                     {item.name}
                   </button>
-                </li>
+                </motion.li>
               ))}
             </ul>
-          </div>
-          <div>
-            <h4 className="font-bold mb-3 md:mb-4 text-sm md:text-base">{t("footer.getInvolved")}</h4>
-            <ul className="space-y-1 md:space-y-2 text-xs md:text-sm">
-              <li>
-                <button
-                  onClick={() => scrollToSection("donate")}
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  {t("header.donate")}
-                </button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.4 }}
+          >
+            <h4 className="font-bold mb-3 md:mb-4 text-sm md:text-base">{t("footer.contact")}</h4>
+            <ul className="space-y-1 md:space-y-2 text-xs md:text-sm text-gray-400">
+              <li className="flex items-start">
+                <span className="mr-2">📍</span>
+                <span>123 Street, City, Country</span>
               </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection("contact")}
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  {t("footer.volunteer")}
-                </button>
+              <li className="flex items-center">
+                <span className="mr-2">📧</span>
+                <a href="mailto:info@beyondborders.org" className="hover:text-white transition-colors">
+                  info@beyondborders.org
+                </a>
               </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection("contact")}
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  {t("footer.partner")}
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection("contact")}
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  {t("footer.newsletter")}
-                </button>
+              <li className="flex items-center">
+                <span className="mr-2">📞</span>
+                <a href="tel:+1234567890" className="hover:text-white transition-colors">
+                  +1 (234) 567-890
+                </a>
               </li>
             </ul>
-          </div>
+          </motion.div>
         </div>
-        <div className="border-t border-gray-800 pt-6 md:pt-8">
-          <div
-            className={`flex flex-col md:flex-row items-center justify-between ${isRTL ? "md:flex-row-reverse" : ""}`}
-          >
-            <p
-              className={`text-xs md:text-sm text-gray-500 mb-3 md:mb-0 text-center ${isRTL ? "md:text-right" : "md:text-left"}`}
-            >
-              {t("footer.copyright")}
-            </p>
-            <div className={`flex flex-wrap gap-3 md:gap-4 justify-center ${isRTL ? "flex-row-reverse" : ""}`}>
-              <a href="#" className="text-gray-500 hover:text-white transition-colors text-xs md:text-sm">
-                {t("footer.privacy")}
-              </a>
-              <a href="#" className="text-gray-500 hover:text-white transition-colors text-xs md:text-sm">
-                {t("footer.terms")}
-              </a>
-            </div>
+
+        <motion.div 
+          className="border-t border-gray-800 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.5 }}
+        >
+          <p className="text-xs text-gray-500 mb-4 md:mb-0">
+            &copy; {new Date().getFullYear()} {t("header.orgName")}. {t("footer.rights")}
+          </p>
+          <div className="flex space-x-4">
+            <a href="#" className="text-xs text-gray-500 hover:text-white transition-colors">
+              {t("footer.privacy")}
+            </a>
+            <span className="text-gray-600">•</span>
+            <a href="#" className="text-xs text-gray-500 hover:text-white transition-colors">
+              {t("footer.terms")}
+            </a>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </footer>
+    </motion.footer>
   )
 }

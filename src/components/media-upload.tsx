@@ -22,7 +22,7 @@ export function MediaUpload() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const allowedTypes = [
-    'image/jpeg',
+    'images/one.png',
     'image/jpg', 
     'image/png',
     'image/gif',

@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Quote } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
+import { images, getImage } from "@/config/images"
 
 export function TestimonialsSection() {
   const { t, isRTL } = useLanguage()
@@ -13,19 +14,19 @@ export function TestimonialsSection() {
       quote: t("testimonials.quote1"),
       name: t("testimonials.name1"),
       role: t("testimonials.role1"),
-      image: "/placeholder.svg?height=80&width=80",
+      image: images.testimonials.person1,
     },
     {
       quote: t("testimonials.quote2"),
       name: t("testimonials.name2"),
       role: t("testimonials.role2"),
-      image: "/placeholder.svg?height=80&width=80",
+      image: images.testimonials.person2,
     },
     {
       quote: t("testimonials.quote3"),
       name: t("testimonials.name3"),
       role: t("testimonials.role3"),
-      image: "/placeholder.svg?height=80&width=80",
+      image: images.testimonials.person3,
     },
   ]
 
@@ -54,7 +55,7 @@ export function TestimonialsSection() {
                   className={`flex items-center space-x-3 md:space-x-4 ${isRTL ? "flex-row-reverse space-x-reverse" : ""}`}
                 >
                   <Image
-                    src={story.image || "/placeholder.svg"}
+                    src={getImage(story.image)}
                     alt={story.name}
                     width={60}
                     height={60}

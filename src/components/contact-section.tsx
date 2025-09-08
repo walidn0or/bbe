@@ -1,7 +1,8 @@
 "use client"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, Globe, MapPin, MessageCircle, Facebook, Linkedin, Instagram } from "lucide-react"
+import { Phone, Mail, Globe, MapPin, Facebook, Linkedin, Instagram, MessageCircle } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 
 interface ContactSectionProps {
@@ -10,12 +11,58 @@ interface ContactSectionProps {
 
 export function ContactSection({ scrollToSection }: ContactSectionProps) {
   const { t, isRTL } = useLanguage()
+  const [submitting, setSubmitting] = useState(false)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setError(null)
+    setSuccess(null)
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const firstName = String(formData.get("firstName") || "").trim()
+    const lastName = String(formData.get("lastName") || "").trim()
+    const email = String(formData.get("email") || "").trim()
+    const subject = String(formData.get("subject") || "").trim()
+    const message = String(formData.get("message") || "").trim()
+
+    if (!firstName || !lastName || !email || !subject || !message) {
+      setError("Please fill in all required fields.")
+      return
+    }
+    const emailOk = /.+@.+\..+/.test(email)
+    if (!emailOk) {
+      setError("Please enter a valid email address.")
+      return
+    }
+
+    try {
+      setSubmitting(true)
+      const res = await fetch(form.action || "https://formspree.io/f/xwpnaapj", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: formData,
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({} as any))
+        throw new Error(data?.error || "Submission failed. Please try again.")
+      }
+      setSuccess("Thanks! Your message has been sent.")
+      form.reset()
+    } catch (err: any) {
+      setError(err?.message || "Something went wrong. Please try again.")
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   const socialLinks = [
-    { icon: MessageCircle, color: "bg-green-600" },
-    { icon: Facebook, color: "bg-blue-600" },
-    { icon: Linkedin, color: "bg-blue-700" },
-    { icon: Instagram, color: "bg-pink-600" },
+    { icon: MessageCircle, label: "WhatsApp", href: "https://chat.whatsapp.com/F05juiisyoi0S99QRf40I7", color: "text-green-600 hover:text-green-700" },
+    { icon: Facebook, label: "Facebook", href: "https://www.facebook.com/share/1BgHmLx9PT/?mibextid=wwXIfr", color: "text-blue-600 hover:text-blue-700" },
+    { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/beyond-borders-empowerment/", color: "text-blue-700 hover:text-blue-800" },
+    { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/beyondbordersempowerment?igsh=MTdmOGgyazY4MG02eg%3D%3D&utm_source=qr", color: "text-pink-600 hover:text-pink-700" },
   ]
 
   return (
@@ -83,14 +130,12 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
               </div>
             </div>
 
-            <div className={`flex flex-wrap gap-3 md:gap-4 mt-6 md:mt-8 ${isRTL ? "flex-row-reverse" : ""}`}>
+            <div className={`flex flex-wrap gap-2 md:gap-3 mt-6 md:mt-8 ${isRTL ? "flex-row-reverse" : ""}`}>
               {socialLinks.map((social, index) => (
-                <Button
-                  key={index}
-                  size="sm"
-                  className={`${social.color} hover:opacity-80 transition-all duration-300 hover:scale-110 w-10 h-10 md:w-12 md:h-12 p-0`}
-                >
-                  <social.icon className="h-4 w-4 md:h-5 md:w-5" />
+                <Button key={index} asChild variant="ghost" size="sm" className={`w-10 h-10 md:w-11 md:h-11 p-0 rounded-full ${social.color} transition-transform hover:scale-110`}>
+                  <a href={social.href} aria-label={social.label} target="_blank" rel="noopener noreferrer">
+                    <social.icon className="h-5 w-5" />
+                  </a>
                 </Button>
               ))}
             </div>
@@ -107,7 +152,8 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
                 </p>
               </CardHeader>
               <CardContent>
-                <form className="space-y-4 md:space-y-6">
+                <form action="https://formspree.io/f/xwpnaapj" method="POST" className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+                  <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className={`block text-sm font-medium text-gray-300 mb-2 ${isRTL ? "text-right" : ""}`}>
@@ -115,6 +161,8 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
                       </label>
                       <input
                         type="text"
+                        name="firstName"
+                        required
                         className="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 text-white transition-colors text-sm md:text-base"
                       />
                     </div>
@@ -124,6 +172,8 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
                       </label>
                       <input
                         type="text"
+                        name="lastName"
+                        required
                         className="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 text-white transition-colors text-sm md:text-base"
                       />
                     </div>
@@ -134,6 +184,8 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
                     </label>
                     <input
                       type="email"
+                      name="email"
+                      required
                       className="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 text-white transition-colors text-sm md:text-base"
                     />
                   </div>
@@ -143,6 +195,8 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
                     </label>
                     <input
                       type="text"
+                      name="subject"
+                      required
                       className="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 text-white transition-colors text-sm md:text-base"
                     />
                   </div>
@@ -152,16 +206,29 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
                     </label>
                     <textarea
                       rows={4}
+                      name="message"
+                      required
                       className="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 text-white resize-none transition-colors text-sm md:text-base"
                     ></textarea>
                   </div>
                   <Button
                     type="submit"
+                    disabled={submitting}
                     className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white transition-all duration-300 hover:scale-105 text-sm md:text-base py-2 md:py-3"
                   >
                     <Mail className={`h-4 w-4 md:h-5 md:w-5 ${isRTL ? "ml-2" : "mr-2"}`} />
-                    {t("contact.sendBtn")}
+                    {submitting ? "Sending..." : t("contact.sendBtn")}
                   </Button>
+                  {error && (
+                    <div className="bg-red-100 border border-red-300 text-red-700 rounded-lg p-3" role="alert" aria-live="polite">
+                      {error}
+                    </div>
+                  )}
+                  {success && (
+                    <div className="bg-green-100 border border-green-300 text-green-700 rounded-lg p-3" role="status" aria-live="polite">
+                      {success}
+                    </div>
+                  )}
                 </form>
               </CardContent>
             </Card>
