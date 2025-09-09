@@ -106,16 +106,18 @@ export function AboutSection() {
                 {isAdmin && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
                     <InlineImageUpload
-                      onUpload={(url) => {
+                      storageKey="about_image_url"
+                      onUploaded={(url) => {
                         setAboutImg(url);
                         if (typeof window !== 'undefined') {
                           localStorage.setItem('about_image_url', url);
                         }
                       }}
-                      className="bg-white/90 hover:bg-white text-red-600 px-4 py-2 rounded-full flex items-center shadow-lg"
                     >
-                      <Upload className="h-4 w-4 mr-2" />
-                      {t('common.changeImage')}
+                      <div className="bg-white/90 hover:bg-white text-red-600 px-4 py-2 rounded-full flex items-center shadow-lg cursor-pointer">
+                        <Upload className="h-4 w-4 mr-2" />
+                        {t('common.changeImage')}
+                      </div>
                     </InlineImageUpload>
                   </div>
                 )}
