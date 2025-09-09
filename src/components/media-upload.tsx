@@ -15,27 +15,25 @@ interface UploadedFile {
   progress: number
 }
 
-export function MediaUpload() {
+interface MediaUploadProps {
+  onUploaded?: (url: string) => void;
+  acceptedTypes?: string;
+  maxSize?: string;
+  label?: string;
+}
+
+export function MediaUpload({ 
+  onUploaded,
+  acceptedTypes = 'image/*,video/*',
+  maxSize = "50", // in MB
+  label = 'Upload Media' 
+}: MediaUploadProps) {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const allowedTypes = [
-    'images/one.png',
-    'image/jpg', 
-    'image/png',
-    'image/gif',
-    'image/webp',
-    'video/mp4',
-    'video/avi',
-    'video/mov',
-    'video/wmv',
-    'video/flv',
-    'video/webm'
-  ]
-
-  const maxFileSize = 50 * 1024 * 1024 // 50MB
+  const maxFileSize = parseInt(maxSize) * 1024 * 1024
 
   const generateId = () => Math.random().toString(36).substr(2, 9)
 
@@ -48,11 +46,11 @@ export function MediaUpload() {
   }
 
   const validateFile = (file: File): string | null => {
-    if (!allowedTypes.includes(file.type)) {
-      return 'File type not supported. Please upload images (JPEG, PNG, GIF, WebP) or videos (MP4, AVI, MOV, WMV, FLV, WebM).'
+    if (!acceptedTypes.split(',').some(type => file.type.startsWith(type.replace('*', '')))) {
+      return `File type not supported. Please upload: ${acceptedTypes}`
     }
     if (file.size > maxFileSize) {
-      return 'File size too large. Maximum size is 50MB.'
+      return `File size too large. Maximum size is ${formatFileSize(maxFileSize)}.`
     }
     return null
   }
@@ -64,25 +62,7 @@ export function MediaUpload() {
         reader.onload = (e) => resolve(e.target?.result as string)
         reader.readAsDataURL(file)
       } else if (file.type.startsWith('video/')) {
-        const video = document.createElement('video')
-        video.preload = 'metadata'
-        video.onloadedmetadata = () => {
-          const canvas = document.createElement('canvas')
-          canvas.width = 200
-          canvas.height = 150
-          const ctx = canvas.getContext('2d')
-          if (ctx) {
-            ctx.fillStyle = '#f0f0f0'
-            ctx.fillRect(0, 0, 200, 150)
-            ctx.fillStyle = '#666'
-            ctx.font = '16px Arial'
-            ctx.textAlign = 'center'
-            ctx.fillText('Video', 100, 75)
-            ctx.fillText(file.name, 100, 95)
-          }
-          resolve(canvas.toDataURL())
-        }
-        video.src = URL.createObjectURL(file)
+        resolve('') // Placeholder for video
       } else {
         resolve('')
       }
@@ -117,46 +97,47 @@ export function MediaUpload() {
       progress: 0
     }])
 
-    // Simulate upload progress
-    const interval = setInterval(() => {
+    const progressInterval = setInterval(() => {
       setUploadedFiles(prev => prev.map(f => 
         f.id === fileId 
-          ? { ...f, progress: Math.min(f.progress + Math.random() * 20, 100) }
+          ? { ...f, progress: Math.min(f.progress + Math.random() * 20, 90) } // Stop at 90% until success
           : f
       ))
     }, 200)
 
     try {
-      // Create FormData for upload
       const formData = new FormData()
       formData.append('files', file)
 
-      // Upload to API
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       })
 
-      clearInterval(interval)
+      clearInterval(progressInterval)
 
       if (response.ok) {
         const result = await response.json()
+        const fileUrl = result.files[0]?.url
         setUploadedFiles(prev => prev.map(f => 
           f.id === fileId 
             ? { 
                 ...f, 
                 status: 'success', 
                 progress: 100,
-                url: result.files[0]?.url || f.url
+                url: fileUrl || f.url
               }
             : f
         ))
+        if (onUploaded && fileUrl) {
+          onUploaded(fileUrl)
+        }
       } else {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Upload failed')
       }
     } catch (error) {
-      clearInterval(interval)
+      clearInterval(progressInterval)
       setUploadedFiles(prev => prev.map(f => 
         f.id === fileId 
           ? { ...f, status: 'error', progress: 0 }
@@ -168,8 +149,9 @@ export function MediaUpload() {
 
   const handleFiles = useCallback((files: FileList) => {
     setIsUploading(true)
-    Array.from(files).forEach(uploadFile)
-    setIsUploading(false)
+    Promise.all(Array.from(files).map(uploadFile)).finally(() => {
+      setIsUploading(false)
+    })
   }, [])
 
   const handleDrop = useCallback((e: React.DragEvent) => {
@@ -199,134 +181,103 @@ export function MediaUpload() {
   }
 
   const getFileIcon = (type: string) => {
-    if (type.startsWith('image/')) return <FileImage className="h-5 w-5" />
-    if (type.startsWith('video/')) return <Video className="h-5 w-5" />
-    return <File className="h-5 w-5" />
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'success':
-        return <CheckCircle className="h-4 w-4 text-green-500" />
-      case 'error':
-        return <AlertCircle className="h-4 w-4 text-red-500" />
-      default:
-        return null
-    }
+    if (type.startsWith('image/')) return <FileImage className="h-8 w-8 text-gray-500" />
+    if (type.startsWith('video/')) return <Video className="h-8 w-8 text-gray-500" />
+    return <File className="h-8 w-8 text-gray-500" />
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-          Media Upload Center
+    <div className="w-full">
+      <div className="bg-white rounded-lg p-4">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+          {label}
         </h2>
         
-        {/* Upload Area */}
         <div
-          className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-300 cursor-pointer ${
-            isDragOver 
-              ? 'border-red-500 bg-red-50 scale-105' 
-              : 'border-gray-300 hover:border-red-400 hover:bg-gray-50'
-          }`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
+          className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors duration-300 ${
+            isDragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
+          }`}
           onClick={() => fileInputRef.current?.click()}
         >
-          <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">
-            Drop your files here or click to browse
-          </h3>
-          <p className="text-gray-500 mb-4">
-            Supports images (JPEG, PNG, GIF, WebP) and videos (MP4, AVI, MOV, WMV, FLV, WebM)
-          </p>
-          <p className="text-sm text-gray-400">
-            Maximum file size: 50MB
-          </p>
+          <div className="flex flex-col items-center justify-center">
+            <Upload className="h-12 w-12 text-gray-400 mb-4" />
+            <p className="text-lg font-semibold text-gray-700">Drag & drop files here</p>
+            <p className="text-gray-500">or click to browse</p>
+            <p className="text-xs text-gray-400 mt-2">
+              {acceptedTypes}
+            </p>
+            <p className="text-xs text-gray-400">
+              Maximum file size: {formatFileSize(maxFileSize)}
+            </p>
+          </div>
           
           <input
             ref={fileInputRef}
             type="file"
             multiple
-            accept="image/*,video/*"
+            accept={acceptedTypes}
             onChange={handleFileInput}
             className="hidden"
           />
         </div>
 
-        {/* Uploaded Files */}
         {uploadedFiles.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Uploaded Files ({uploadedFiles.length})
-            </h3>
-            
-            <div className="space-y-4">
-              {uploadedFiles.map((file) => (
-                <div key={file.id} className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      {file.preview ? (
-                        <img 
-                          src={file.preview} 
-                          alt={file.name}
-                          className="w-12 h-12 object-cover rounded"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                          {getFileIcon(file.type)}
-                        </div>
-                      )}
-                      
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2">
-                          <span className="font-medium text-gray-900">{file.name}</span>
-                          {getStatusIcon(file.status)}
-                        </div>
-                        <div className="flex items-center space-x-4 text-sm text-gray-500">
-                          <span>{formatFileSize(file.size)}</span>
-                          <span>{file.type}</span>
-                        </div>
+          <div className="mt-6">
+            <h3 className="text-lg font-medium text-gray-800 mb-4">Uploaded Files</h3>
+            <ul className="space-y-4">
+              {uploadedFiles.map(file => (
+                <li key={file.id} className="bg-gray-50 p-4 rounded-lg flex items-center space-x-4">
+                  <div className="flex-shrink-0">
+                    {file.preview ? (
+                      <img src={file.preview} alt={file.name} className="h-16 w-16 object-cover rounded-md" />
+                    ) : (
+                      <div className="h-16 w-16 bg-gray-200 rounded-md flex items-center justify-center">
+                        {getFileIcon(file.type)}
                       </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-2">
-                      {file.status === 'uploading' && (
-                        <div className="w-24 bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-red-500 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${file.progress}%` }}
-                          />
-                        </div>
-                      )}
-                      
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeFile(file.id)}
-                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
+                    )}
                   </div>
-                </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{file.name}</p>
+                    <p className="text-sm text-gray-500">{formatFileSize(file.size)}</p>
+                    
+                    {file.status === 'uploading' && (
+                      <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                        <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${file.progress}%` }}></div>
+                      </div>
+                    )}
+
+                    {file.status === 'success' && (
+                      <div className="flex items-center text-green-600 text-sm mt-1">
+                        <CheckCircle className="h-4 w-4 mr-1" />
+                        <span>Upload complete</span>
+                      </div>
+                    )}
+
+                    {file.status === 'error' && (
+                      <div className="flex items-center text-red-600 text-sm mt-1">
+                        <AlertCircle className="h-4 w-4 mr-1" />
+                        <span>Upload failed</span>
+                      </div>
+                    )}
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={() => removeFile(file.id)}>
+                    <X className="h-5 w-5 text-gray-500" />
+                  </Button>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         )}
 
-        {/* Upload Progress */}
         {isUploading && (
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <div className="flex items-center space-x-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
-              <span className="text-blue-700">Uploading files...</span>
-            </div>
+          <div className="mt-4 text-center text-gray-600">
+            <p>Uploading files, please wait...</p>
           </div>
         )}
       </div>
     </div>
   )
-} 
+}
