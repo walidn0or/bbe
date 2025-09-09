@@ -15,7 +15,7 @@ type AnimationType =
   | "slideLeft"
   | "slideRight"
 
-interface AnimateProps extends HTMLMotionProps<"div"> {
+interface AnimateProps extends Omit<HTMLMotionProps<"div">, 'as'> {
   children: React.ReactNode
   type?: AnimationType
   delay?: number
@@ -38,7 +38,7 @@ export function Animate({
   ...props
 }: AnimateProps) {
   const [isInView, setIsInView] = useState(false)
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const hasAnimated = useRef(false)
 
   // Animation variants
@@ -115,7 +115,7 @@ export function Animate({
     }
   }, [amount, once])
 
-  const MotionComponent = motion[Component as keyof typeof motion] || motion.div
+  const MotionComponent = motion.div
 
   return (
     <MotionComponent
