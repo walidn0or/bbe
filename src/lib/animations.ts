@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, createElement } from 'react';
 
 type AnimationType = 'fadeIn' | 'slideUp' | 'slideLeft' | 'slideRight' | 'zoomIn';
 
@@ -111,14 +111,14 @@ export function AnimateOnScroll({
     triggerOnce,
   });
 
-  return (
-    <Component
-      {...animationProps}
-      className={`${animationProps.className} ${className}`}
-      {...props}
-    >
-      {children}
-    </Component>
+  return createElement(
+    Component as React.ElementType,
+    {
+      ...animationProps,
+      className: `${animationProps.className} ${className}`,
+      ...props,
+    },
+    children
   );
 }
 
