@@ -23,6 +23,10 @@ export function LanguageSwitcher() {
     setIsOpen(false)
   }
 
+  if (!currentLanguage) {
+    return null
+  }
+
   return (
     <div className="relative">
       <Button
