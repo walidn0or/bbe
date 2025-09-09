@@ -131,8 +131,8 @@ export function initializeScrollAnimations() {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
+        const element = entry.target as HTMLElement;
         if (entry.isIntersecting) {
-          const element = entry.target as HTMLElement;
           const animationType = element.getAttribute('data-animate') || 'fadeIn';
           const delay = parseInt(element.getAttribute('data-delay') || '0', 10);
           
