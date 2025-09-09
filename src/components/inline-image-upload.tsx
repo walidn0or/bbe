@@ -7,9 +7,10 @@ interface InlineImageUploadProps {
   label?: string
   storageKey: string
   onUploaded: (url: string) => void
+  children?: React.ReactNode
 }
 
-export function InlineImageUpload({ label = "Change Image", storageKey, onUploaded }: InlineImageUploadProps) {
+export function InlineImageUpload({ label = "Change Image", storageKey, onUploaded, children }: InlineImageUploadProps) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -45,13 +46,14 @@ export function InlineImageUpload({ label = "Change Image", storageKey, onUpload
   return (
     <div className="flex items-center gap-2 mt-2">
       <label className="cursor-pointer">
-        <input type="file" accept="image/*" className="hidden" onChange={handlePickFile} />
-        <Button size="sm" variant="outline" className="bg-white">
-          {uploading ? "Uploading..." : label}
-        </Button>
+        <input type="file" accept="image/*" className="hidden" onChange={handlePickFile} disabled={uploading} />
+        {children || (
+          <Button size="sm" variant="outline" className="bg-white">
+            {uploading ? "Uploading..." : label}
+          </Button>
+        )}
       </label>
       {error && <span className="text-xs text-red-600">{error}</span>}
     </div>
   )
 }
-
