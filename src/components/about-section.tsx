@@ -140,48 +140,11 @@ export function AboutSection() {
                   </Button>
                 </Link>
               </div>
-              <div className={`flex items-center space-x-4 ${isRTL ? "flex-row-reverse space-x-reverse" : ""} mt-6`}>
-                <div className={`flex ${isRTL ? "-space-x-2 flex-row-reverse" : "-space-x-2"}`}>
-                  {/* ========== TEAM MEMBER IMAGES UPLOAD SECTION ========== */}
-                  {/* 
-                    To update team member images:
-                    1. Replace images in: public/images/about/team/
-                    2. Recommended size: 500x500px (1:1 ratio - square)
-                    3. File names: team-member-1.jpg, team-member-2.jpg, team-member-3.jpg
-                    4. Update paths in: src/config/images.ts -> about.team
-                    5. For best results: Professional headshots, good lighting
-                    6. Format: JPG or PNG, compressed to under 200KB each
-                  */}
-                  <Image
-                    src={images.about.team.member1}
-                    alt="Team member 1"
-                    width={40}
-                    height={40}
-                    className="rounded-full border-2 border-white w-8 h-8 md:w-10 md:h-10 hover:scale-110 transition-transform duration-200"
-                  />
-                  <Image
-                    src={images.about.team.member2}
-                    alt="Team member 2"
-                    width={40}
-                    height={40}
-                    className="rounded-full border-2 border-white w-8 h-8 md:w-10 md:h-10 hover:scale-110 transition-transform duration-200"
-                  />
-                  <Image
-                    src={images.about.team.member3}
-                    alt="Team member 3"
-                    width={40}
-                    height={40}
-                    className="rounded-full border-2 border-white w-8 h-8 md:w-10 md:h-10 hover:scale-110 transition-transform duration-200"
-                  />
-                  {/* ========== END TEAM MEMBER IMAGES UPLOAD SECTION ========== */}
-                </div>
-                <p className="text-sm text-gray-600">{t("about.teamText")}</p>
-              </div>
             </div>
           </div>
 
           {/* Mission & Vision Cards */}
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-6xl mx-auto">
+          <div id="mission-vision" className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-6xl mx-auto scroll-mt-20">
             <Card className="border-0 shadow-xl bg-gradient-to-br from-red-50 to-red-100 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-red-200 rounded-full -translate-y-16 translate-x-16 opacity-50"></div>
               <CardHeader className="relative z-10">
@@ -220,7 +183,7 @@ export function AboutSection() {
       </section>
 
       {/* Core Values Section */}
-      <section className="py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+      <section id="core-values" className="py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-blue-50 scroll-mt-20">
         <div className="container mx-auto px-4">
           <div className={`text-center mb-12 md:mb-16 ${isRTL ? "text-right" : ""}`}>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{t("about.valuesTitle")}</h2>

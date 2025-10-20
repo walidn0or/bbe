@@ -97,7 +97,7 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
                 </div>
                 <div>
                   <p className="font-semibold text-sm md:text-base">{t("contact.email")}</p>
-                  <p className="opacity-90 text-sm md:text-base break-all">beyondbordersempowerment@outlook.com</p>
+                  <p className="opacity-90 text-sm md:text-base break-all">info@bbe.ngo</p>
                 </div>
               </div>
             </div>

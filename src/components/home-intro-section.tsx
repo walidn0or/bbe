@@ -1,126 +1,182 @@
-"use client"
+"use client";
 
-import { useRef, useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Heart, PlayCircle, Pause } from "lucide-react"
-import { useLanguage } from "@/contexts/language-context"
+import { useEffect, useMemo, useRef, useState } from "react";
+import { PlayCircle, Pause } from "lucide-react";
+import { images } from "@/config/images";
 
 interface HomeIntroSectionProps {
-  scrollToSection: (sectionId: string) => void
+  scrollToSection: (sectionId: string) => void;
+}
+
+interface VideoItem {
+  id: string;
+  title: string;
+  url: string;
+  thumbnail: string;
+}
+
+// Video gallery - Add or modify videos here
+const videoGallery: VideoItem[] = [
+  {
+    id: "1",
+    title: "Welcome to BBE",
+    url: images.impactStories.welcome,
+    thumbnail: "/images/content/1.jpeg"
+  },
+  {
+    id: "2",
+    title: "Orphanage Support",
+    url: images.impactStories.orphanageSupport,
+    thumbnail: "/images/content/Orphaned Children Support + Accountability_.jpg"
+  },
+  {
+    id: "3",
+    title: "Education Program",
+    url: images.impactStories.educationProgram,
+    thumbnail: "/images/content/Education Support.jpeg"
+  },
+  {
+    id: "4",
+    title: "Community Impact",
+    url: images.impactStories.communityImpact,
+    thumbnail: "/images/content/Economic Empowerment1.jpeg"
+  }
+];
+
+function getMimeTypeFromUrl(url: string): string {
+  const ext = url.split(".").pop()?.toLowerCase();
+  switch (ext) {
+    case "mp4":
+      return "video/mp4";
+    case "webm":
+      return "video/webm";
+    case "mov":
+      return "video/quicktime";
+    default:
+      return "video/mp4";
+  }
 }
 
 export function HomeIntroSection({ scrollToSection }: HomeIntroSectionProps) {
-  const { isRTL } = useLanguage()
-  const [isPlaying, setIsPlaying] = useState(true)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<VideoItem>(videoGallery[0]);
+  const [isLoading, setIsLoading] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const mimeType = useMemo(() => getMimeTypeFromUrl(selectedVideo.url), [selectedVideo.url]);
+
+  const tryAutoplay = () => {
+    const el = videoRef.current;
+    if (!el) return;
+    el.play().then(() => {
+      setIsPlaying(true);
+    }).catch(() => {
+      setIsPlaying(false);
+    });
+  };
+
+  useEffect(() => {
+    tryAutoplay();
+  }, []);
 
   const togglePlayPause = () => {
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play().catch(error => {
-          console.error("Error playing video:", error)
-        })
-      } else {
-        videoRef.current.pause()
-      }
+    const el = videoRef.current;
+    if (!el) return;
+    if (el.paused) {
+      el.play().then(() => setIsPlaying(true)).catch(() => {
+        // Video play failed - user interaction may be required
+      });
+    } else {
+      el.pause();
+      setIsPlaying(false);
     }
-  }
+  };
+
+  const handleVideoSelect = (video: VideoItem) => {
+    setSelectedVideo(video);
+    if (videoRef.current) {
+      videoRef.current.load();
+      tryAutoplay();
+    }
+  };
+
+  const handleOverlayKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      togglePlayPause();
+    }
+  };
 
   return (
-    <section id="home-intro" className="py-10 md:py-16 bg-white">
+    <section id="home-intro" className="py-10 md:py-16 bg-gradient-to-b from-white to-gray-50">
       <div className="container mx-auto px-4">
-        <div className={`flex flex-col lg:flex-row items-center gap-8 xl:gap-12 ${isRTL ? 'lg:flex-row-reverse' : ''}`}>
-          <div className="lg:flex-1 max-w-2xl">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-              Welcome to BBE
-            </h2>
-            <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-              Beyond Borders Empowerment (BBE) empowers marginalized communities through education, economic
-              opportunities, healthcare support, and humanitarian aid — with a special focus on women and girls.
-            </p>
-            <div className={`flex flex-wrap gap-4 mt-8 ${isRTL ? 'justify-end' : 'justify-start'}`}>
-              <Button 
-                onClick={() => scrollToSection("donate")} 
-                className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 text-base"
+        {/* Video Gallery Selector */}
+        <div className="mb-8 max-w-6xl mx-auto">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            Our Impact Stories
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {videoGallery.map((video) => (
+              <button
+                key={video.id}
+                onClick={() => handleVideoSelect(video)}
+                className={`group relative aspect-video rounded-lg overflow-hidden transition-all duration-300 ${
+                  selectedVideo.id === video.id
+                    ? 'ring-4 ring-red-600 shadow-xl scale-105'
+                    : 'ring-2 ring-gray-200 hover:ring-red-400 hover:shadow-lg hover:scale-102'
+                }`}
               >
-                <Heart className={`h-5 w-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                Join our Mission
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => scrollToSection("contact")}
-                className="px-8 py-3 text-base border-gray-300 hover:bg-gray-50"
-              >
-                Get involved
-              </Button>
-            </div>
+                <img
+                  src={video.thumbnail}
+                  alt={video.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+                  <PlayCircle className="h-10 w-10 text-white opacity-90 group-hover:opacity-100 transition-opacity" />
+                </div>
+                {selectedVideo.id === video.id && (
+                  <div className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                    Now Playing
+                  </div>
+                )}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-2">
+                  <p className="text-white text-xs font-semibold truncate">{video.title}</p>
+                </div>
+              </button>
+            ))}
           </div>
-          
-          <div className="w-full lg:w-3/5 xl:w-1/2 mt-6 lg:mt-0">
-            {/* ========== HOME INTRO VIDEO UPLOAD SECTION ========== */}
-            {/* 
-              To update the home intro video:
-              1. Place your video in: public/video/
-              2. Recommended format: MP4 with H.264 codec
-              3. Recommended resolution: 1080p (1920x1080)
-              4. Max length: 60 seconds for optimal engagement
-              5. Update the video source below:
-                 - Current: src="/video/IMG_3547.mov"
-                 - Change to: src="/video/your-video-file.mp4"
-              6. For best results, compress the video to under 10MB
-              7. Video will autoplay (muted) and loop continuously
-            */}
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl group">
-              <video 
-                ref={videoRef}
-                className="w-full h-full object-cover"
-                autoPlay 
-                muted 
-                loop
-                playsInline
-                disablePictureInPicture
-                disableRemotePlayback
-                controlsList="nodownload noplaybackrate nofullscreen"
-                onContextMenu={(e) => e.preventDefault()}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                onClick={togglePlayPause}
-                poster="/images/content/1.jpeg"
-              >
-                <source src="/video/IMG_3547.mov" type="video/mp4" />
-                <source src="/video/IMG_3547.webm" type="video/webm" />
-                Your browser does not support the video tag.
-              </video>
-              
-              {/* Interactive Play/Pause Overlay */}
-              <div 
-                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
-                onClick={togglePlayPause}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === ' ' && togglePlayPause()}
-                aria-label={isPlaying ? "Pause video" : "Play video"}
-              >
-                <div className="bg-white/90 hover:bg-white text-red-600 rounded-full p-3 shadow-lg transform transition-all hover:scale-110">
-                  {isPlaying ? (
-                    <Pause className="h-8 w-8" />
-                  ) : (
-                    <PlayCircle className="h-8 w-8" />
-                  )}
-                </div>
-              </div>
+        </div>
 
-              {/* Video Progress Indicator */}
-              <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="bg-black/20 rounded-full h-1 overflow-hidden">
-                  <div className="bg-white h-full rounded-full animate-pulse"></div>
-                </div>
-              </div>
-            </div>
-            {/* ========== END HOME INTRO VIDEO UPLOAD SECTION ========== */}
+        {/* Main Video Player */}
+        <div className="max-w-6xl mx-auto">
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black">
+            <video
+              key={selectedVideo.url}
+              ref={videoRef}
+              className="w-full rounded-2xl"
+              controls
+              controlsList="nodownload"
+              playsInline
+              preload="auto"
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              onError={() => {
+                // Video failed to load - silently handle
+              }}
+              onLoadedMetadata={() => {
+                // Video metadata loaded
+              }}
+              onCanPlay={() => {
+                // Video ready to play
+              }}
+              style={{ maxHeight: '600px', width: '100%', display: 'block', backgroundColor: '#000' }}
+            >
+              <source src={selectedVideo.url} type="video/quicktime" />
+              <source src={selectedVideo.url} type="video/mp4" />
+            </video>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -26,7 +26,11 @@ const translations:any = {
   en: {
     // Header
     "header.home": "Home",
-    "header.about": "About",
+    "header.about": "About Us",
+    "header.aboutOverview": "Overview",
+    "header.aboutMissionVision": "Mission & Vision",
+    "header.aboutCoreValues": "Core Values",
+    "header.aboutBackground": "Organizational Background",
     "header.programs": "Programs",
     "header.news": "News",
     "header.videos": "Videos",
@@ -36,6 +40,7 @@ const translations:any = {
     "header.donate": "Donate Now",
     "header.orgName": "Beyond Borders Empowerment",
     "header.regNumber": "",
+    "header.donateShort": "Donate",
 
     // Hero Section
     "hero.badge": "Registered NGO Since 2023",
@@ -141,6 +146,9 @@ const translations:any = {
     "news.moreNews": "More News",
     "news.likeArticle": "Like Article",
     "news.shareArticle": "Share Article",
+    "news.shareOn": "Share on",
+    "news.copyLink": "Copy Link",
+    "news.linkCopied": "Link Copied!",
 
     // Videos Section
     "videos.title": "Our Impact in Action",
@@ -278,6 +286,10 @@ const translations:any = {
     // Header - Persian/Farsi
     "header.home": "خانه",
     "header.about": "درباره ما",
+    "header.aboutOverview": "نمای کلی",
+    "header.aboutMissionVision": "ماموریت و چشم‌انداز",
+    "header.aboutCoreValues": "ارزش‌های اصلی",
+    "header.aboutBackground": "پیشینه سازمانی",
     "header.programs": "برنامه‌ها",
     "header.news": "اخبار",
     "header.videos": "ویدیوها",
@@ -287,6 +299,7 @@ const translations:any = {
     "header.donate": "کمک مالی",
     "header.orgName": "توانمندسازی فراتر از مرزها",
     "header.regNumber": "",
+    "header.donateShort": "کمک",
 
     // Hero Section
     "hero.badge": "سازمان غیردولتی ثبت شده از سال ۲۰۲۳",
@@ -392,6 +405,9 @@ const translations:any = {
     "news.moreNews": "اخبار بیشتر",
     "news.likeArticle": "پسندیدن مقاله",
     "news.shareArticle": "اشتراک‌گذاری مقاله",
+    "news.shareOn": "اشتراک‌گذاری در",
+    "news.copyLink": "کپی لینک",
+    "news.linkCopied": "لینک کپی شد!",
 
     // Videos Section
     "videos.title": "تأثیر ما در عمل",
@@ -527,6 +543,10 @@ const translations:any = {
     // Header - Pashto
     "header.home": "کور",
     "header.about": "زموږ په اړه",
+    "header.aboutOverview": "عمومي کتنه",
+    "header.aboutMissionVision": "ماموریت او لید",
+    "header.aboutCoreValues": "اصلي ارزښتونه",
+    "header.aboutBackground": "سازماني شالید",
     "header.programs": "پروګرامونه",
     "header.news": "خبرونه",
     "header.videos": "ویډیوګانې",
@@ -536,6 +556,7 @@ const translations:any = {
     "header.donate": "مرسته وکړئ",
     "header.orgName": "د پولو څخه هاخوا پیاوړتیا",
     "header.regNumber": "",
+    "header.donateShort": "مرسته",
 
     // Hero Section
     "hero.badge": "د ۲۰۲۳ څخه راهیسې ثبت شوې غیر دولتي موسسه",
@@ -641,6 +662,9 @@ const translations:any = {
     "news.moreNews": "نور خبرونه",
     "news.likeArticle": "د مقالې خوښول",
     "news.shareArticle": "د مقالې شریکول",
+    "news.shareOn": "شریکول په",
+    "news.copyLink": "لینک کاپي کړئ",
+    "news.linkCopied": "لینک کاپي شو!",
 
     // Videos Section
     "videos.title": "زموږ اغیزه په عمل کې",

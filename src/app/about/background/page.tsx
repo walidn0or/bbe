@@ -60,7 +60,7 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
       role: "Founder and Director",
       bio:
         "Scholar at UCL Political Science; former lecturer at Salam University; founder & CEO of Ravi Zan Media; 10+ years advocating for marginalized communities and human rights.",
-      imageUrl: images.fallback.placeholder,
+      imageUrl: images.about.team.sosan,
     },
     {
       key: "farangis-fariwar",
@@ -68,7 +68,7 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
       role: "Board of Trustees",
       bio:
         "BSc Social Sciences (Open University, UK). Two decades in the UK; ESOL tutor; Accounts Technician (AAT). NGO experience with Afghanaid, IOM, IRC; active in community support in UK, Greece, and Afghanistan.",
-      imageUrl: images.fallback.placeholder,
+      imageUrl: images.about.team.farangis,
     },
     {
       key: "imran-fazal",
@@ -76,7 +76,7 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
       role: "Board of Trustees",
       bio:
         "Gold Medalist; Information Scientist; author/translator of 87+ Pashto books; background in public sector reform, digital transformation, and community development; founder of IKF Enterprise.",
-      imageUrl: images.fallback.placeholder,
+      imageUrl: images.about.team.imran,
     },
     {
       key: "kaihan-alambye",
@@ -84,7 +84,7 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
       role: "PhD Researcher and Writer",
       bio:
         "Researches violence, trauma, and political structures. PPE (Essex), MSc Anthropology of Politics, Violence & Crime (UCL); PhD at UCL on transgenerational trauma in marginalized communities.",
-      imageUrl: images.fallback.placeholder,
+      imageUrl: images.about.team.kaihan,
     },
     {
       key: "waheed-niawash",
@@ -92,7 +92,7 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
       role: "Country Director",
       bio:
         "Entrepreneur and FinTech specialist based in Kabul. BBA (Kabul University); Diploma in Accounting; multiple international certifications across IT, research, and digital payments.",
-      imageUrl: images.fallback.placeholder,
+      imageUrl: images.about.team.waheed,
     },
     {
       key: "sadaf-ghawsi",
@@ -100,7 +100,7 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
       role: "Programs & Technical Lead / Project Management",
       bio:
         "Public Health (KMU); Business Administration (UoPeople). Former Operations Manager at AWCCI; technical officer in health sector; Program Manager at BBE; frequent national/international representative for Afghan women.",
-      imageUrl: images.fallback.placeholder,
+      imageUrl: images.about.team.sadaf,
     },
     {
       key: "khatira-fikrat",
@@ -108,7 +108,7 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
       role: "HR & Administrative Manager; Educator",
       bio:
         "Business & Finance enthusiast (AUAF); English diploma (Muslim ELI). HR/Admin roles at multiple orgs; Executive Assistant at TEDx Share-e-Naw; fluent in Dari and English; passionate about education and community empowerment.",
-      imageUrl: images.fallback.placeholder,
+      imageUrl: images.about.team.khatira,
     },
     {
       key: "geety-haidary",
@@ -116,7 +116,7 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
       role: "Researcher",
       bio:
         "LLB/Political Science (Kabul University); pursuing BBA (Finance) at AUAF. Volunteer roles at ALPA (faculty relations, curriculum coordinator), USIP mentorship program; experience in legal and logistics sectors.",
-      imageUrl: images.fallback.placeholder,
+      imageUrl: images.about.team.geety,
     },
     {
       key: "hasina-zmarai",
@@ -124,15 +124,15 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
       role: "Researcher",
       bio:
         "Dedicated researcher skilled in academic studies, data collection, and analysis; delivers structured, precise, and high-quality research outputs.",
-      imageUrl: images.fallback.placeholder,
+      imageUrl: images.about.team.hasina,
     },
     {
       key: "adeeba-bareen",
       name: "Adeeba Bareen",
       role: "Educator | Student | Community Volunteer",
       bio:
-        "BBA (AUAF) and Economics (Women’s Online University); TESOL/TTC; English instructor since 2021; active in student support/admin and youth volunteering; fluent in English, Turkish, Pashto, and Dari.",
-      imageUrl: images.fallback.placeholder,
+        "BBA (AUAF) and Economics (Women's Online University); TESOL/TTC; English instructor since 2021; active in student support/admin and youth volunteering; fluent in English, Turkish, Pashto, and Dari.",
+      imageUrl: images.about.team.adeeba,
     },
     {
       key: "malika-hail",
@@ -140,11 +140,22 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
       role: "Educator",
       bio:
         "Educator, artist, and student; Diploma in English; Certificate in Digital Marketing; training in business, mental health, and team building; teaches English/computers to Afghan girls; fluent in English, Dari, Pashto, Urdu.",
-      imageUrl: images.fallback.placeholder,
+      imageUrl: images.about.team.malika,
     },
-    { key: "sadad-ghawsi", name: "Sadad Ghawsi", role: "Instructor", bio: "", imageUrl: images.fallback.placeholder },
-    { key: "hamasa-noorzai", name: "Hamasa Noorzai", role: "Instructor", bio: "", imageUrl: images.fallback.placeholder },
-    { key: "zarghona-ahmadi", name: "Zarghona Ahmadi", role: "Instructor", bio: "", imageUrl: images.fallback.placeholder },
+
+    { key: "hamasa-noorzai",
+       name: "Hamasa Noorzai",
+        role: "Instructor",
+         bio: "",
+          imageUrl: images.about.team.hamasa 
+        },
+
+    { key: "zarghona-ahmadi",
+       name: "Zarghona Ahmadi",
+        role: "Instructor",
+         bio: "",
+          imageUrl: images.about.team.zarghona 
+        },
   ])
 
   useEffect(() => {

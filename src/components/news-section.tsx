@@ -4,7 +4,7 @@ import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Calendar, Clock, ArrowRight, ChevronRight, X, Share2, BookOpen, Eye, Heart } from "lucide-react"
+import { Calendar, Clock, ArrowRight, X, Share2, BookOpen, Eye, Heart, Twitter, Facebook, Linkedin, MessageCircle, Mail, Link2, Check, ChevronRight } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 import { useState, useEffect } from "react"
 import { images, getImage } from "@/config/images"
@@ -14,17 +14,15 @@ export function NewsSection() {
   const { t, isRTL } = useLanguage()
 
   const [selectedArticle, setSelectedArticle] = useState<any>(null)
-  const [showAllArticles, setShowAllArticles] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const [animateCards, setAnimateCards] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [showShareMenu, setShowShareMenu] = useState<number | null>(null)
+  const [copiedLink, setCopiedLink] = useState(false)
+  const [likedArticles, setLikedArticles] = useState<Set<number>>(new Set())
   const [newsImages, setNewsImages] = useState<Record<number, string>>({
     1: images.news.featured,
     2: images.news.article1,
     3: images.news.article2,
-    4: images.news.article3,
-    5: images.news.article4,
-    6: images.news.article5,
   })
 
   // Trigger card animations on mount
@@ -33,6 +31,24 @@ export function NewsSection() {
     return () => clearTimeout(timer)
   }, [])
 
+  // Close share menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (showShareMenu !== null && !target.closest('.share-menu-container')) {
+        setShowShareMenu(null)
+      }
+    }
+
+    if (showShareMenu !== null) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showShareMenu])
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       setIsAdmin(new URLSearchParams(window.location.search).get("admin") === "1")
@@ -40,9 +56,6 @@ export function NewsSection() {
         1: localStorage.getItem("news_image_1") || prev[1],
         2: localStorage.getItem("news_image_2") || prev[2],
         3: localStorage.getItem("news_image_3") || prev[3],
-        4: localStorage.getItem("news_image_4") || prev[4],
-        5: localStorage.getItem("news_image_5") || prev[5],
-        6: localStorage.getItem("news_image_6") || prev[6],
       }))
     }
   }, [])
@@ -50,100 +63,50 @@ export function NewsSection() {
   const newsArticles = [
     {
       id: 1,
-      title: "Virtual Education Project Reaches 200+ Students Across Afghanistan",
+      title: "Virtual Education Milestone: Curriculum Completed September 2025",
       excerpt:
-        "Our virtual education initiative has successfully expanded to serve over 200 Afghan girls and women across 24 provinces, providing them with essential English and computer skills.",
+        "A key milestone has been the completion of the virtual English class curriculum in September 2025. Basic-level students will advance to intermediate classes, while advanced students will begin IELTS preparation.",
       image: newsImages[1],
-      date: "March 15, 2025",
+      date: "September 2025",
       category: t("news.education"),
-      readTime: "3",
+      readTime: "5",
       featured: true,
-      views: "2.1K",
-      likes: 156,
-      tags: ["Education", "Virtual Learning", "Women Empowerment"],
+      views: "4.1K",
+      likes: 312,
+      tags: ["Virtual Education", "English Classes", "IELTS", "Curriculum"],
     },
     {
       id: 2,
-      title: "New Partnership with International Education Foundation",
+      title: "Virtual Education Project Inaugurated - February 2025",
       excerpt:
-        "BBE announces strategic partnership to provide certified high school education and university preparation programs for Afghan students.",
+        "BBE inaugurated the Virtual Education Project with 100 attendees including NGO directors, Afghan diaspora members, business owners, and U.K. government representatives. The project now reaches over 400 students across Afghanistan, Pakistan, and Iran.",
       image: newsImages[2],
-      date: "March 10, 2025",
-      category: t("news.partnership"),
-      readTime: "2",
+      date: "February 2025",
+      category: t("news.education"),
+      readTime: "4",
       featured: false,
-      views: "1.8K",
-      likes: 124,
-      tags: ["Partnership", "Higher Education", "Certification"],
+      views: "3.8K",
+      likes: 287,
+      tags: ["Virtual Education", "Launch Event", "International Partnership"],
     },
     {
       id: 3,
-      title: "Mobile Health Clinics Launch in Remote Areas",
+      title: "300+ Applications for Coding & Microsoft Office Courses",
       excerpt:
-        "Our first mobile health clinic begins operations in underserved communities, providing essential medical care and mental health support.",
+        "Recently launched virtual Microsoft Office and coding courses for Afghan girls have received an overwhelming response with more than 300 applications. These courses are expanding technical education opportunities for Afghan students.",
       image: newsImages[3],
-      date: "March 8, 2025",
-      category: t("news.healthcare"),
-      readTime: "4",
-      featured: false,
-      views: "3.2K",
-      likes: 198,
-      tags: ["Healthcare", "Mobile Clinics", "Mental Health"],
-    },
-    {
-      id: 4,
-      title: "Coding Bootcamp Graduates First Cohort",
-      excerpt:
-        "25 young women complete our intensive coding and cybersecurity program, with 80% securing remote work opportunities.",
-      image: newsImages[4],
-      date: "March 5, 2025",
+      date: "October 2025",
       category: t("news.skillsTraining"),
       readTime: "3",
       featured: false,
-      views: "2.7K",
-      likes: 203,
-      tags: ["Skills Training", "Technology", "Employment"],
-    },
-    {
-      id: 5,
-      title: "Emergency Relief Reaches 500 Families",
-      excerpt:
-        "BBE's emergency response team provides food, shelter, and medical supplies to families affected by recent natural disasters.",
-      image: newsImages[5],
-      date: "March 1, 2025",
-      category: t("news.emergencyAid"),
-      readTime: "2",
-      featured: false,
-      views: "1.9K",
-      likes: 167,
-      tags: ["Emergency Aid", "Disaster Relief", "Humanitarian"],
-    },
-    {
-      id: 6,
-      title: "Women's Entrepreneurship Program Shows Remarkable Success",
-      excerpt:
-        "Over 100 women have started their own businesses through our entrepreneurship training, generating sustainable income for their families.",
-      image: newsImages[6],
-      date: "February 28, 2025",
-      category: t("news.economicEmpowerment"),
-      readTime: "5",
-      featured: false,
-      views: "2.4K",
-      likes: 189,
-      tags: ["Entrepreneurship", "Women's Rights", "Economic Growth"],
+      views: "2.9K",
+      likes: 234,
+      tags: ["Coding", "Microsoft Office", "Afghan Girls", "Tech Education"],
     },
   ]
 
   const featuredArticle = newsArticles[0]
   const otherArticles = newsArticles.slice(1)
-
-  const handleViewAll = () => {
-    setIsLoading(true)
-    setTimeout(() => {
-      setShowAllArticles(!showAllArticles)
-      setIsLoading(false)
-    }, 500)
-  }
 
   const handleArticleClick = (article: any) => {
     setSelectedArticle(article)
@@ -153,6 +116,59 @@ export function NewsSection() {
   const handleCloseModal = () => {
     setSelectedArticle(null)
     document.body.style.overflow = "unset"
+  }
+
+  const handleShare = (article: any, platform: string) => {
+    const url = typeof window !== 'undefined' ? window.location.origin : ''
+    const articleUrl = `${url}#news`
+    const title = article.title
+    const text = article.excerpt
+
+    switch (platform) {
+      case 'twitter':
+        window.open(
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(articleUrl)}`,
+          '_blank',
+          'width=600,height=400'
+        )
+        break
+      case 'facebook':
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`,
+          '_blank',
+          'width=600,height=400'
+        )
+        break
+      case 'linkedin':
+        window.open(
+          `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`,
+          '_blank',
+          'width=600,height=400'
+        )
+        break
+      case 'whatsapp':
+        window.open(
+          `https://wa.me/?text=${encodeURIComponent(title + ' - ' + articleUrl)}`,
+          '_blank'
+        )
+        break
+      case 'email':
+        window.location.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(text + '\n\n' + articleUrl)}`
+        break
+      case 'copy':
+        navigator.clipboard.writeText(articleUrl).then(() => {
+          setCopiedLink(true)
+          setTimeout(() => {
+            setCopiedLink(false)
+            setShowShareMenu(null)
+          }, 2000)
+        })
+        break
+    }
+
+    if (platform !== 'copy') {
+      setShowShareMenu(null)
+    }
   }
 
   return (
@@ -181,8 +197,8 @@ export function NewsSection() {
         </div>
 
         {/* Featured Article with enhanced design */}
-        <div className="max-w-7xl mx-auto mb-12 md:mb-16">
-          <Card className="border-0 shadow-2xl bg-white overflow-hidden group hover:shadow-3xl transition-all duration-500 animate-slide-up">
+        <div className="max-w-7xl mx-auto mb-12 md:mb-16 relative">
+          <Card className="border-0 shadow-2xl bg-white overflow-visible group hover:shadow-3xl transition-all duration-500 animate-slide-up">
             <div className={`grid lg:grid-cols-2 gap-0 ${isRTL ? "lg:grid-flow-col-dense" : ""}`}>
               <div className={`relative order-2 lg:order-1 ${isRTL ? "lg:order-2" : ""} overflow-hidden`}>
                 <Image
@@ -270,17 +286,68 @@ export function NewsSection() {
                   <Button
                     variant="destructive"
                     onClick={() => handleArticleClick(featuredArticle)}
-                    rightIcon={<ArrowRight className="h-3 w-3 md:h-4 md:w-4" />}
+                    rightIcon={<ArrowRight className="h-4 w-4" />}
                   >
                     {t("news.readFull")}
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="border-gray-300 text-gray-700"
-                  >
-                    <Share2 className="h-3 w-3 md:h-4 md:w-4" />
-                  </Button>
+                  <div className="relative share-menu-container">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all"
+                      onClick={() => setShowShareMenu(showShareMenu === featuredArticle.id ? null : featuredArticle.id)}
+                    >
+                      <Share2 className="h-4 w-4" />
+                    </Button>
+                    {showShareMenu === featuredArticle.id && (
+                      <div className={`absolute bottom-full mb-2 ${isRTL ? "left-0" : "right-0"} bg-white rounded-lg shadow-2xl border border-gray-200 p-2 z-[9999] min-w-[200px] animate-scale-in`}>
+                        <div className="text-xs font-semibold text-gray-500 px-3 py-2 border-b">{t("news.shareOn") || "Share on"}</div>
+                        <button
+                          onClick={() => handleShare(featuredArticle, 'twitter')}
+                          className="w-full flex items-center gap-3 px-3 py-2 hover:bg-blue-50 rounded-md transition-colors text-left"
+                        >
+                          <Twitter className="h-4 w-4 text-blue-400" />
+                          <span className="text-sm">Twitter</span>
+                        </button>
+                        <button
+                          onClick={() => handleShare(featuredArticle, 'facebook')}
+                          className="w-full flex items-center gap-3 px-3 py-2 hover:bg-blue-50 rounded-md transition-colors text-left"
+                        >
+                          <Facebook className="h-4 w-4 text-blue-600" />
+                          <span className="text-sm">Facebook</span>
+                        </button>
+                        <button
+                          onClick={() => handleShare(featuredArticle, 'linkedin')}
+                          className="w-full flex items-center gap-3 px-3 py-2 hover:bg-blue-50 rounded-md transition-colors text-left"
+                        >
+                          <Linkedin className="h-4 w-4 text-blue-700" />
+                          <span className="text-sm">LinkedIn</span>
+                        </button>
+                        <button
+                          onClick={() => handleShare(featuredArticle, 'whatsapp')}
+                          className="w-full flex items-center gap-3 px-3 py-2 hover:bg-green-50 rounded-md transition-colors text-left"
+                        >
+                          <MessageCircle className="h-4 w-4 text-green-600" />
+                          <span className="text-sm">WhatsApp</span>
+                        </button>
+                        <button
+                          onClick={() => handleShare(featuredArticle, 'email')}
+                          className="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-50 rounded-md transition-colors text-left"
+                        >
+                          <Mail className="h-4 w-4 text-gray-600" />
+                          <span className="text-sm">Email</span>
+                        </button>
+                        <div className="border-t my-1"></div>
+                        <button
+                          onClick={() => handleShare(featuredArticle, 'copy')}
+                          className="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-50 rounded-md transition-colors text-left"
+                        >
+                          {copiedLink ? <Check className="h-4 w-4 text-green-600" /> : <Link2 className="h-4 w-4 text-gray-600" />}
+                          <span className="text-sm">{copiedLink ? t("news.linkCopied") || "Link Copied!" : t("news.copyLink") || "Copy Link"}</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -289,30 +356,15 @@ export function NewsSection() {
 
         {/* Other Articles Grid with staggered animations */}
         <div className="max-w-7xl mx-auto">
-          <div className={`flex items-center justify-between mb-8 ${isRTL ? "flex-row-reverse" : ""}`}>
+          <div className={`mb-8 ${isRTL ? "text-right" : ""}`}>
             <h3 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-2">
               <div className="w-1 h-6 bg-gradient-to-b from-red-600 to-blue-600 rounded-full"></div>
               {t("news.moreNews")}
             </h3>
-            <Button
-              variant="ghost"
-              onClick={handleViewAll}
-              disabled={isLoading}
-              className="text-blue-600 hover:text-blue-700"
-              rightIcon={
-                <ChevronRight
-                  className={`h-4 w-4 transition-transform ${
-                    showAllArticles ? (isRTL ? "rotate-180" : "rotate-180") : isRTL ? "rotate-180" : ""
-                  }`}
-                />
-              }
-            >
-              {showAllArticles ? t("common.showLess") : t("common.viewAll")}
-            </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {otherArticles.slice(0, showAllArticles ? otherArticles.length : 3).map((article, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {otherArticles.map((article, index) => (
               <Card
                 key={article.id}
                 className={`group hover:shadow-2xl transition-all duration-500 border-0 bg-white overflow-hidden hover:-translate-y-2 cursor-pointer ${
@@ -404,18 +456,93 @@ export function NewsSection() {
                     <Button
                       variant="link"
                       className="text-blue-600 p-0 hover:no-underline group-hover:translate-x-1 transition-transform"
-                      onClick={() => handleArticleClick(article)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleArticleClick(article)
+                      }}
+                      rightIcon={<ChevronRight className="h-3 w-3 md:h-4 md:w-4" />}
                     >
                       {t("news.readMore")}
-                      <ChevronRight className="h-3 w-3 md:h-4 md:w-4 ml-1" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
-                    >
-                      <Share2 className="h-3 w-3" />
-                    </Button>
+                    <div className="relative share-menu-container">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setShowShareMenu(showShareMenu === article.id ? null : article.id)
+                        }}
+                      >
+                        <Share2 className="h-4 w-4" />
+                      </Button>
+                      {showShareMenu === article.id && (
+                        <div className="absolute bottom-full mb-2 right-0 bg-white rounded-lg shadow-xl border border-gray-200 p-2 z-[9999] min-w-[200px] animate-scale-in">
+                          <div className="text-xs font-semibold text-gray-500 px-3 py-2 border-b">{t("news.shareOn") || "Share on"}</div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleShare(article, 'twitter')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-blue-50 rounded-md transition-colors text-left"
+                          >
+                            <Twitter className="h-4 w-4 text-blue-400" />
+                            <span className="text-sm">Twitter</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleShare(article, 'facebook')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-blue-50 rounded-md transition-colors text-left"
+                          >
+                            <Facebook className="h-4 w-4 text-blue-600" />
+                            <span className="text-sm">Facebook</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleShare(article, 'linkedin')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-blue-50 rounded-md transition-colors text-left"
+                          >
+                            <Linkedin className="h-4 w-4 text-blue-700" />
+                            <span className="text-sm">LinkedIn</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleShare(article, 'whatsapp')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-green-50 rounded-md transition-colors text-left"
+                          >
+                            <MessageCircle className="h-4 w-4 text-green-600" />
+                            <span className="text-sm">WhatsApp</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleShare(article, 'email')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-50 rounded-md transition-colors text-left"
+                          >
+                            <Mail className="h-4 w-4 text-gray-600" />
+                            <span className="text-sm">Email</span>
+                          </button>
+                          <div className="border-t my-1"></div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleShare(article, 'copy')
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-50 rounded-md transition-colors text-left"
+                          >
+                            {copiedLink ? <Check className="h-4 w-4 text-green-600" /> : <Link2 className="h-4 w-4 text-gray-600" />}
+                            <span className="text-sm">{copiedLink ? t("news.linkCopied") || "Link Copied!" : t("news.copyLink") || "Copy Link"}</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -425,78 +552,87 @@ export function NewsSection() {
 
         {/* Enhanced Article Detail Modal */}
         {selectedArticle && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
-            <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden animate-scale-in shadow-2xl">
+          <div 
+            className="fixed top-20 left-0 right-0 bottom-0 bg-black/80 backdrop-blur-sm z-40 flex items-start justify-center p-4 pt-8 animate-fade-in overflow-y-auto"
+            onClick={handleCloseModal}
+          >
+            <div className="relative w-full max-w-4xl mb-8">
+              <div 
+                className="bg-white rounded-2xl w-full overflow-hidden animate-scale-in shadow-2xl relative"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Close Button - Positioned at top-right corner of modal */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleCloseModal}
+                  className={`absolute ${isRTL ? "left-4" : "right-4"} top-4 z-50 bg-white hover:bg-red-600 text-gray-700 hover:text-white transition-all rounded-full h-12 w-12 shadow-2xl hover:shadow-red-500/50 border-2 border-gray-300 hover:border-red-600`}
+                >
+                  <X className="h-6 w-6" />
+                </Button>
+
               {/* Modal Header */}
               <div
-                className={`flex items-center justify-between p-4 md:p-6 border-b bg-gradient-to-r from-red-50 to-blue-50 ${isRTL ? "flex-row-reverse" : ""}`}
+                className={`flex items-start p-5 md:p-6 border-b bg-gradient-to-r from-red-50 via-white to-blue-50 ${isRTL ? "flex-row-reverse" : ""}`}
               >
-                <div className="flex-1">
-                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""}`}>
-                    <Badge  className="text-xs md:text-sm">
+                <div className={`flex-1 ${isRTL ? "pl-16" : "pr-16"}`}>
+                  <div className={`flex items-center gap-3 mb-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+                    <Badge className="text-xs md:text-sm bg-gradient-to-r from-red-600 to-blue-600 text-white">
                       {selectedArticle.category}
                     </Badge>
                     <div className={`flex items-center gap-4 text-xs text-gray-500 ${isRTL ? "flex-row-reverse" : ""}`}>
                       <div className={`flex items-center gap-1 ${isRTL ? "flex-row-reverse" : ""}`}>
                         <Eye className="h-3 w-3" />
-                        {selectedArticle.views}
+                        <span>{selectedArticle.views}</span>
                       </div>
                       <div className={`flex items-center gap-1 ${isRTL ? "flex-row-reverse" : ""}`}>
                         <Heart className="h-3 w-3 text-red-500" />
-                        {selectedArticle.likes}
+                        <span>{selectedArticle.likes}</span>
                       </div>
                     </div>
                   </div>
-                  <h2 className={`text-lg md:text-xl font-bold text-gray-900 ${isRTL ? "text-right" : ""}`}>
+                  <h2 className={`text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight ${isRTL ? "text-right" : ""}`}>
                     {selectedArticle.title}
                   </h2>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleCloseModal}
-                  className="text-gray-500 hover:text-gray-700 transition-colors flex-shrink-0 ml-4 hover:bg-red-50"
-                >
-                  <X className="h-4 w-4 md:h-5 md:w-5" />
-                </Button>
               </div>
 
               {/* Modal Content */}
-              <div className="overflow-y-auto max-h-[calc(90vh-120px)]">
+              <div className="overflow-y-auto max-h-[calc(90vh-140px)] scroll-smooth">
                 <div className="relative">
                   <Image
                     src={getImage(selectedArticle.image)}
                     alt={selectedArticle.title}
                     width={800}
                     height={400}
-                    className="w-full h-64 md:h-80 object-cover"
+                    className="w-full h-56 md:h-72 lg:h-80 object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
                 </div>
 
-                <div className="p-4 md:p-6">
+                <div className="p-6 md:p-8 lg:p-10">
                   {/* Article meta */}
-                  <div className={`flex flex-wrap items-center gap-2 md:gap-4 mb-6 ${isRTL ? "flex-row-reverse" : ""}`}>
+                  <div className={`flex flex-wrap items-center gap-4 md:gap-6 mb-6 pb-6 border-b border-gray-200 ${isRTL ? "flex-row-reverse" : ""}`}>
                     <div
-                      className={`flex items-center text-xs md:text-sm text-gray-500 ${isRTL ? "flex-row-reverse" : ""}`}
+                      className={`flex items-center text-sm md:text-base text-gray-600 ${isRTL ? "flex-row-reverse" : ""}`}
                     >
-                      <Calendar className={`h-3 w-3 md:h-4 md:w-4 ${isRTL ? "ml-1" : "mr-1"}`} />
-                      {selectedArticle.date}
+                      <Calendar className={`h-4 w-4 md:h-5 md:w-5 ${isRTL ? "ml-2" : "mr-2"} text-red-600`} />
+                      <span className="font-medium">{selectedArticle.date}</span>
                     </div>
                     <div
-                      className={`flex items-center text-xs md:text-sm text-gray-500 ${isRTL ? "flex-row-reverse" : ""}`}
+                      className={`flex items-center text-sm md:text-base text-gray-600 ${isRTL ? "flex-row-reverse" : ""}`}
                     >
-                      <Clock className={`h-3 w-3 md:h-4 md:w-4 ${isRTL ? "ml-1" : "mr-1"}`} />
-                      {selectedArticle.readTime} {t("news.minRead")}
+                      <Clock className={`h-4 w-4 md:h-5 md:w-5 ${isRTL ? "ml-2" : "mr-2"} text-blue-600`} />
+                      <span className="font-medium">{selectedArticle.readTime} {t("news.minRead")}</span>
                     </div>
                   </div>
 
                   {/* Tags */}
-                  <div className={`flex flex-wrap gap-2 mb-6 ${isRTL ? "flex-row-reverse" : ""}`}>
+                  <div className={`flex flex-wrap gap-2 mb-8 ${isRTL ? "flex-row-reverse" : ""}`}>
                     {selectedArticle.tags.map((tag: string, index: number) => (
                       <span
                         key={index}
-                        className="px-3 py-1 bg-gradient-to-r from-red-100 to-blue-100 text-gray-700 text-sm rounded-full hover:from-red-200 hover:to-blue-200 transition-colors cursor-pointer"
+                        className="px-4 py-2 bg-gradient-to-r from-red-100 to-blue-100 text-gray-800 text-sm font-medium rounded-full hover:from-red-200 hover:to-blue-200 transition-all hover:shadow-md cursor-pointer"
                       >
                         #{tag}
                       </span>
@@ -505,42 +641,35 @@ export function NewsSection() {
 
                   {/* Article content */}
                   <div className={`prose prose-lg max-w-none ${isRTL ? "text-right" : ""}`}>
-                    <p className="text-gray-700 mb-6 leading-relaxed text-sm md:text-base font-medium">
+                    <p className="text-gray-800 mb-8 leading-relaxed text-base md:text-lg font-medium">
                       {selectedArticle.excerpt}
                     </p>
 
-                    <div className="space-y-4 text-sm md:text-base leading-relaxed">
+                    <div className="space-y-6 text-base md:text-lg leading-relaxed text-gray-700">
                       {selectedArticle.id === 1 && (
                         <>
                           <p>
-                            Our Virtual Education Project has achieved a remarkable milestone, successfully expanding to
-                            serve over 200 Afghan girls and women across 24 provinces. This comprehensive initiative
-                            provides essential English language skills and computer literacy training through innovative
-                            online platforms.
+                            The Virtual Education Project has achieved a significant milestone with the completion of the virtual English class curriculum in September 2025. This comprehensive program reaches over 400 students across Afghanistan and Afghan diaspora communities in Pakistan and Iran.
                           </p>
 
                           <p>
-                            The program has been particularly impactful in remote areas where traditional educational
-                            opportunities are limited. Students participate in interactive virtual classrooms, receiving
-                            personalized instruction from qualified teachers and mentors.
+                            Students enrolled in the basic-level English courses will now advance to intermediate classes, while those in advanced levels will begin IELTS preparation. This progression demonstrates the project's commitment to providing structured, quality education that meets international standards.
                           </p>
 
-                          <blockquote className="border-l-4 border-red-500 pl-4 italic text-gray-600 bg-red-50 p-4 rounded-r-lg">
-                            "The virtual classes have opened new doors for me. I can now communicate with people from
-                            around the world and have gained confidence in using technology." - Fatima, Student
-                          </blockquote>
-
-                          <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">Key Achievements:</h4>
-                          <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                            <li>200+ active students enrolled across 24 provinces</li>
-                            <li>95% completion rate for English language courses</li>
-                            <li>80% of graduates have secured remote work opportunities</li>
-                            <li>Partnerships with international education platforms</li>
+                          <h4 className="text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-4 flex items-center gap-2">
+                            <div className="w-1 h-6 bg-gradient-to-b from-red-600 to-blue-600 rounded-full"></div>
+                            Program Highlights:
+                          </h4>
+                          <ul className="list-disc pl-6 space-y-3 text-gray-700 text-base md:text-lg">
+                            <li>Over 400 students enrolled across Afghanistan, Pakistan, and Iran</li>
+                            <li>Curriculum completed in September 2025</li>
+                            <li>Basic students advancing to intermediate level</li>
+                            <li>Advanced students beginning IELTS preparation</li>
+                            <li>Virtual classrooms enabling access from multiple provinces</li>
                           </ul>
 
                           <p>
-                            Looking ahead, we plan to expand the program to reach 500 students by the end of 2025,
-                            introducing new courses in digital marketing, graphic design, and entrepreneurship.
+                            The success of this program demonstrates the power of virtual education in reaching students who might otherwise have limited access to quality English language instruction.
                           </p>
                         </>
                       )}
@@ -548,83 +677,135 @@ export function NewsSection() {
                       {selectedArticle.id === 2 && (
                         <>
                           <p>
-                            Beyond Borders Empowerment is proud to announce a strategic partnership with the
-                            International Education Foundation, marking a significant step forward in our mission to
-                            provide quality education to Afghan students.
+                            In February 2025, Beyond Borders Empowerment inaugurated the Virtual Education Project with a landmark event attended by 100 distinguished guests. The ceremony brought together NGO directors, members of the Afghan diaspora, business owners, and representatives from the U.K. government.
                           </p>
 
                           <p>
-                            This collaboration will enable us to offer certified high school education and university
-                            preparation programs, giving our students internationally recognized qualifications.
+                            This project represents a major step forward in BBE's mission to provide accessible, quality education to Afghan students regardless of their location. The virtual platform enables students from various provinces of Afghanistan, as well as diaspora communities in Pakistan and Iran, to access educational opportunities.
                           </p>
 
-                          <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">Partnership Benefits:</h4>
-                          <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                            <li>Accredited high school diploma programs</li>
-                            <li>University preparation courses</li>
-                            <li>Scholarship opportunities for higher education</li>
-                            <li>Career counseling and guidance services</li>
+                          <h4 className="text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-4 flex items-center gap-2">
+                            <div className="w-1 h-6 bg-gradient-to-b from-red-600 to-blue-600 rounded-full"></div>
+                            Project Impact:
+                          </h4>
+                          <ul className="list-disc pl-6 space-y-3 text-gray-700 text-base md:text-lg">
+                            <li>100 attendees at inauguration ceremony</li>
+                            <li>Over 400 students currently enrolled</li>
+                            <li>Students from Afghanistan, Pakistan, and Iran</li>
+                            <li>Support from international partners and government representatives</li>
+                            <li>On-ground schools successfully completing programs</li>
                           </ul>
 
-                          <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-600 bg-blue-50 p-4 rounded-r-lg">
-                            "This partnership represents hope for thousands of young people who dream of continuing
-                            their education. We're breaking down barriers and creating pathways to success." - Education
-                            Director
-                          </blockquote>
+                          <p>
+                            The Virtual Education Project continues to grow, with new student applications being accepted through a Google Form selection process.
+                          </p>
                         </>
                       )}
 
-                      {/* Add similar content for other articles */}
                       {selectedArticle.id === 3 && (
                         <>
                           <p>
-                            Our first mobile health clinic has officially begun operations, bringing essential medical
-                            care and mental health support directly to underserved communities across Afghanistan.
+                            BBE has recently launched virtual Microsoft Office and coding courses specifically designed for Afghan girls. The response has been overwhelming, with more than 300 applications received for these technical education programs.
                           </p>
 
                           <p>
-                            The mobile clinic is equipped with modern medical equipment and staffed by qualified
-                            healthcare professionals, including doctors, nurses, and mental health counselors.
+                            These courses are part of BBE's commitment to expanding technical education opportunities and empowering Afghan girls with essential digital skills that can open doors to future career opportunities.
                           </p>
 
-                          <h4 className="text-lg font-semibold text-gray-900 mt-6 mb-3">Services Provided:</h4>
-                          <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                            <li>Primary healthcare consultations</li>
-                            <li>Maternal and child health services</li>
-                            <li>Mental health counseling and support</li>
-                            <li>Health education and awareness programs</li>
-                            <li>Emergency medical assistance</li>
+                          <h4 className="text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-4 flex items-center gap-2">
+                            <div className="w-1 h-6 bg-gradient-to-b from-red-600 to-blue-600 rounded-full"></div>
+                            Course Offerings:
+                          </h4>
+                          <ul className="list-disc pl-6 space-y-3 text-gray-700 text-base md:text-lg">
+                            <li>Virtual Microsoft Office training</li>
+                            <li>Coding and programming courses</li>
+                            <li>Over 300 applications received</li>
+                            <li>Courses specifically designed for Afghan girls</li>
+                            <li>Focus on practical, career-ready skills</li>
                           </ul>
 
-                          <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
-                            <p className="text-green-800 font-medium">Impact in Numbers:</p>
-                            <p className="text-green-700">
-                              In its first month of operation, the mobile clinic has served over 300 patients and
-                              conducted health education sessions for more than 500 community members.
+                          <div className="bg-blue-50 p-5 md:p-6 rounded-xl border-l-4 border-blue-500 mt-6">
+                            <p className="text-blue-900 font-bold text-lg mb-2">Growing Demand:</p>
+                            <p className="text-blue-800 text-base md:text-lg leading-relaxed">
+                              The high number of applications demonstrates the strong demand for technical education among Afghan girls and the importance of providing these opportunities.
                             </p>
                           </div>
                         </>
                       )}
+
                     </div>
                   </div>
 
                   {/* Action buttons */}
-                  <div className={`flex gap-3 mt-8 pt-6 border-t ${isRTL ? "flex-row-reverse" : ""}`}>
+                  <div className={`flex flex-wrap gap-3 mt-10 pt-8 border-t-2 border-gray-200 ${isRTL ? "flex-row-reverse" : ""}`}>
                     <Button
                       variant="destructive"
-                      leftIcon={<Heart className="h-4 w-4" />}
+                      className="gap-2 px-6 py-3 text-base font-semibold"
                     >
+                      <Heart className="h-5 w-5" />
                       {t("news.likeArticle")}
                     </Button>
-                    <Button
-                      variant="outline"
-                      className="border-gray-300 text-gray-700"
-                      leftIcon={<Share2 className="h-4 w-4" />}
-                    >
-                      {t("news.shareArticle")}
-                    </Button>
+                    <div className="relative share-menu-container">
+                      <Button
+                        variant="outline"
+                        className="border-2 border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400 gap-2 px-6 py-3 text-base font-semibold"
+                        onClick={() => setShowShareMenu(showShareMenu === selectedArticle.id ? null : selectedArticle.id)}
+                      >
+                        <Share2 className="h-5 w-5" />
+                        {t("news.shareArticle")}
+                      </Button>
+                      {showShareMenu === selectedArticle.id && (
+                        <div className="absolute bottom-full mb-2 left-0 bg-white rounded-lg shadow-xl border border-gray-200 p-2 z-[9999] min-w-[200px] animate-scale-in">
+                          <div className="text-xs font-semibold text-gray-500 px-3 py-2 border-b">{t("news.shareOn") || "Share on"}</div>
+                          <button
+                            onClick={() => handleShare(selectedArticle, 'twitter')}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-blue-50 rounded-md transition-colors text-left"
+                          >
+                            <Twitter className="h-4 w-4 text-blue-400" />
+                            <span className="text-sm">Twitter</span>
+                          </button>
+                          <button
+                            onClick={() => handleShare(selectedArticle, 'facebook')}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-blue-50 rounded-md transition-colors text-left"
+                          >
+                            <Facebook className="h-4 w-4 text-blue-600" />
+                            <span className="text-sm">Facebook</span>
+                          </button>
+                          <button
+                            onClick={() => handleShare(selectedArticle, 'linkedin')}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-blue-50 rounded-md transition-colors text-left"
+                          >
+                            <Linkedin className="h-4 w-4 text-blue-700" />
+                            <span className="text-sm">LinkedIn</span>
+                          </button>
+                          <button
+                            onClick={() => handleShare(selectedArticle, 'whatsapp')}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-green-50 rounded-md transition-colors text-left"
+                          >
+                            <MessageCircle className="h-4 w-4 text-green-600" />
+                            <span className="text-sm">WhatsApp</span>
+                          </button>
+                          <button
+                            onClick={() => handleShare(selectedArticle, 'email')}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-50 rounded-md transition-colors text-left"
+                          >
+                            <Mail className="h-4 w-4 text-gray-600" />
+                            <span className="text-sm">Email</span>
+                          </button>
+                          <div className="border-t my-1"></div>
+                          <button
+                            onClick={() => handleShare(selectedArticle, 'copy')}
+                            className="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-50 rounded-md transition-colors text-left"
+                          >
+                            {copiedLink ? <Check className="h-4 w-4 text-green-600" /> : <Link2 className="h-4 w-4 text-gray-600" />}
+                            <span className="text-sm">{copiedLink ? t("news.linkCopied") || "Link Copied!" : t("news.copyLink") || "Copy Link"}</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
+              </div>
               </div>
             </div>
           </div>

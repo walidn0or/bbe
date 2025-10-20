@@ -1,0 +1,12 @@
+# robots.txt for Beyond Borders Empowerment (BBE)
+
+User-agent: *
+Allow: /
+
+# Disallow admin and upload pages
+Disallow: /admin/
+Disallow: /upload/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://bbe.ngo/sitemap.xml

@@ -1,36 +1,70 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import Link from "next/link"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Heart, Menu, X } from "lucide-react"
+import { Heart, Menu, X, ChevronDown } from "lucide-react"
 import { LanguageSwitcher } from "./language-switcher"
 import { useLanguage } from "@/contexts/language-context"
+import { images } from "@/config/images"
 
 interface HeaderProps {
   activeSection: string
-  scrollToSection: (sectionId: string) => void
+  scrollToSection?: (sectionId: string) => void
 }
 
-export function Header({ activeSection, scrollToSection }: HeaderProps) {
+export function Header({ activeSection }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false)
   const { t, isRTL } = useLanguage()
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Clear timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const handleDropdownEnter = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current)
+      closeTimeoutRef.current = null
+    }
+    setAboutDropdownOpen(true)
+  }
+
+  const handleDropdownLeave = () => {
+    // Add a delay before closing to allow clicking on submenu items
+    closeTimeoutRef.current = setTimeout(() => {
+      setAboutDropdownOpen(false)
+    }, 150)
+  }
 
   const navigationItems = [
-    { name: t("header.home"), id: "home" },
-    { name: t("header.about"), id: "about" },
-    { name: t("header.programs"), id: "programs" },
-    { name: t("header.news"), id: "news" },
-    { name: t("header.impact"), id: "impact" },
-    { name: t("header.contact"), id: "contact" },
+    { name: t("header.home"), id: "home", href: "/" },
+    { 
+      name: t("header.about"), 
+      id: "about", 
+      href: "/about",
+      hasDropdown: true,
+      subItems: [
+        { name: t("header.aboutOverview"), href: "/about" },
+        { name: t("header.aboutMissionVision"), href: "/about#mission-vision" },
+        { name: t("header.aboutCoreValues"), href: "/about#core-values" },
+        { name: t("header.aboutBackground"), href: "/about/background" },
+      ]
+    },
+    { name: t("header.programs"), id: "programs", href: "/programs" },
+    { name: t("header.news"), id: "news", href: "/news" },
+    { name: t("header.impact"), id: "impact", href: "/impact" },
+    { name: t("header.contact"), id: "contact", href: "/contact" },
   ]
 
-  const handleNavClick = (sectionId: string) => {
-    if (sectionId === "home") {
-      window.scrollTo({ top: 0, behavior: "smooth" })
-    } else {
-      scrollToSection(sectionId)
-    }
+  const handleMobileMenuClose = () => {
     setMobileMenuOpen(false)
   }
 
@@ -39,100 +73,164 @@ export function Header({ activeSection, scrollToSection }: HeaderProps) {
       <div className="container mx-auto px-4 py-3 md:py-4">
         <div className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
           {/* Logo Section */}
-          <div
+          <Link
+            href="/"
             className={`flex items-center space-x-2 md:space-x-4 cursor-pointer flex-shrink-0 ${isRTL ? "flex-row-reverse space-x-reverse" : ""}`}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <Image
-              src="/images/Beyond-Borders-Empowerment-logo-PNG.svg"
+              src={images.logo}
               alt="Beyond Borders Empowerment Logo"
               width={60}
               height={60}
-              className="md:w-[60px] md:h-[60px] rounded-none shadow-md transition-transform hover:scale-105"
+              className="w-12 h-12 md:w-16 md:h-16"
             />
-            <div className="min-w-0">
-              <h1 className={`text-sm md:text-xl font-bold text-gray-900 truncate ${isRTL ? "text-right" : ""}`}>
-                {t("header.orgName")}
+            <div className={`flex flex-col ${isRTL ? "text-right" : ""}`}>
+              <h1 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
+                Beyond Borders Empowerment
               </h1>
+              <p className="text-xs md:text-sm text-gray-600 hidden sm:block">
+                {t("")}
+              </p>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
-          <nav className={`hidden lg:flex space-x-6 xl:space-x-8 ${isRTL ? "space-x-reverse" : ""}`}>
+          <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2">
             {navigationItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                aria-current={activeSection === item.id ? "page" : undefined}
-                className={`group text-gray-700 transition-colors duration-200 font-medium relative text-sm xl:text-base focus:outline-none ${
-                  activeSection === item.id ? "text-red-600" : "hover:text-red-600"
-                }`}
-              >
-                {item.name}
-                <span
-                  className={`absolute -bottom-1 ${isRTL ? "right-0" : "left-0"} h-0.5 bg-red-600 transition-all duration-200 ${
-                    activeSection === item.id ? "w-full" : "w-0 group-hover:w-full"
+              item.hasDropdown ? (
+                <div 
+                  key={item.id}
+                  className="relative"
+                  onMouseEnter={handleDropdownEnter}
+                  onMouseLeave={handleDropdownLeave}
+                >
+                  <button
+                    className={`px-3 xl:px-4 py-2 rounded-lg text-sm xl:text-base font-medium transition-all duration-200 hover:bg-gray-100 flex items-center gap-1 ${
+                      activeSection === item.id
+                        ? "text-red-600 bg-red-50 border-b-2 border-red-600"
+                        : "text-gray-700 hover:text-red-600"
+                    }`}
+                  >
+                    {item.name}
+                    <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${
+                      aboutDropdownOpen ? "rotate-180" : ""
+                    }`} />
+                  </button>
+                  {aboutDropdownOpen && (
+                    <div 
+                      className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50"
+                      onMouseEnter={handleDropdownEnter}
+                      onMouseLeave={handleDropdownLeave}
+                    >
+                      {item.subItems?.map((subItem, idx) => (
+                        <Link
+                          key={idx}
+                          href={subItem.href}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-150"
+                        >
+                          {subItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className={`px-3 xl:px-4 py-2 rounded-lg text-sm xl:text-base font-medium transition-all duration-200 hover:bg-gray-100 ${
+                    activeSection === item.id
+                      ? "text-red-600 bg-red-50 border-b-2 border-red-600"
+                      : "text-gray-700 hover:text-red-600"
                   }`}
-                ></span>
-              </button>
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
           </nav>
 
-          {/* Language Switcher, Mobile Menu Button and Donate Button */}
-          <div className={`flex items-center space-x-2 ${isRTL ? "flex-row-reverse space-x-reverse" : ""}`}>
-            {/* Language Switcher */}
+          {/* Right Section - Language Switcher and Donate Button */}
+          <div className={`flex items-center space-x-2 md:space-x-4 ${isRTL ? "flex-row-reverse space-x-reverse" : ""}`}>
             <LanguageSwitcher />
-
-            {/* Donate Button - Always visible but responsive */}
-            <Button
-              className="hidden sm:flex bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg transition-all duration-300 hover:scale-105 text-xs md:text-sm px-3 md:px-4 py-2 focus:outline-none"
-              onClick={() => scrollToSection("donate")}
-            >
-              <Heart className={`h-3 w-3 md:h-4 md:w-4 ${isRTL ? "ml-1 md:ml-2" : "mr-1 md:mr-2"}`} />
-              <span className="hidden md:inline">{t("header.donate")}</span>
-              <span className="md:hidden">{t("header.donate").split(" ")[0]}</span>
-            </Button>
+            
+            <Link href="/donate">
+              <Button
+                variant="destructive"
+                size="sm"
+                className="bg-red-600 hover:bg-red-700 text-white font-medium px-3 md:px-6 py-2 rounded-lg transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
+                leftIcon={<Heart className="h-4 w-4" />}
+              >
+                <span className="hidden sm:inline">{t("header.donate")}</span>
+                <span className="sm:hidden">{t("header.donateShort")}</span>
+              </Button>
+            </Link>
 
             {/* Mobile Menu Button */}
             <Button
               variant="ghost"
               size="sm"
+              className="lg:hidden p-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 focus:outline-none"
             >
-              {mobileMenuOpen ? <X className="h-5 w-5 md:h-6 md:w-6" /> : <Menu className="h-5 w-5 md:h-6 md:w-6" />}
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
         </div>
 
         {/* Mobile Navigation Menu */}
-        <div
-          className={`lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
-            mobileMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
-          }`}
-        >
-          <nav className="flex flex-col space-y-3 py-4 border-t border-gray-200">
-            {navigationItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`${isRTL ? "text-right" : "text-left"} text-gray-700 hover:text-red-600 transition-colors font-medium py-2 px-2 rounded-lg hover:bg-gray-50 focus:outline-none ${
-                  activeSection === item.id ? "text-red-600 bg-red-50" : ""
-                }`}
-              >
-                {item.name}
-              </button>
-            ))}
-            {/* Mobile Donate Button */}
-            <Button
-              className="sm:hidden bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg mt-2 focus:outline-none"
-              onClick={() => handleNavClick("donate")}
-            >
-              <Heart className={`h-4 w-4 ${isRTL ? "ml-2" : "mr-2"}`} />
-              {t("header.donate")}
-            </Button>
-          </nav>
-        </div>
+        {mobileMenuOpen && (
+          <div className="lg:hidden mt-4 pb-4 border-t border-gray-200">
+            <nav className="flex flex-col space-y-2 pt-4">
+              {navigationItems.map((item) => (
+                item.hasDropdown ? (
+                  <div key={item.id}>
+                    <button
+                      onClick={() => setAboutDropdownOpen(!aboutDropdownOpen)}
+                      className={`w-full px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 flex items-center justify-between ${
+                        activeSection === item.id
+                          ? "text-red-600 bg-red-50 border-l-4 border-red-600"
+                          : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+                      } ${isRTL ? "text-right border-r-4 border-l-0 flex-row-reverse" : ""}`}
+                    >
+                      {item.name}
+                      <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${
+                        aboutDropdownOpen ? "rotate-180" : ""
+                      }`} />
+                    </button>
+                    {aboutDropdownOpen && (
+                      <div className={`ml-4 mt-2 space-y-1 ${isRTL ? "mr-4 ml-0" : ""}`}>
+                        {item.subItems?.map((subItem, idx) => (
+                          <Link
+                            key={idx}
+                            href={subItem.href}
+                            onClick={handleMobileMenuClose}
+                            className="block px-4 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-150"
+                          >
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onClick={handleMobileMenuClose}
+                    className={`px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
+                      activeSection === item.id
+                        ? "text-red-600 bg-red-50 border-l-4 border-red-600"
+                        : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+                    } ${isRTL ? "text-right border-r-4 border-l-0" : ""}`}
+                  >
+                    {item.name}
+                  </Link>
+                )
+              ))}
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   )

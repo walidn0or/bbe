@@ -8,7 +8,7 @@ import { useLanguage, type Language } from "@/contexts/language-context"
 
 const languages = [
   { code: "en" as Language, name: "English", nativeName: "English", flag: "🇺🇸" },
-  { code: "fa" as Language, name: "Persian", nativeName: "فارسی", flag: "🇮🇷" },
+  { code: "fa" as Language, name: "Persian", nativeName: "فارسی", flag: "🇦🇫" },
   { code: "ps" as Language, name: "Pashto", nativeName: "پښتو", flag: "🇦🇫" },
 ]
 

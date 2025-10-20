@@ -75,14 +75,6 @@ export function HeroSection({ scrollToSection }: HeroSectionProps) {
             </div>
           </div>
           <div className={`relative order-1 lg:order-2 ${isRTL ? "lg:order-1" : ""}`}>
-            {/* ========== HERO IMAGE UPLOAD SECTION ========== */}
-            {/* 
-              To update the hero image:
-              1. Place your image in: public/images/hero/
-              2. Recommended size: 1920x1080px (16:9 ratio)
-              3. Update the path in: src/config/images.ts
-              4. The image will be automatically cropped to fit the container
-            */}
             <div className="relative h-64 md:h-80 lg:h-96 xl:h-[500px] rounded-2xl overflow-hidden shadow-xl group">
               <Image
                 src={heroImg}
@@ -110,7 +102,6 @@ export function HeroSection({ scrollToSection }: HeroSectionProps) {
                 </div>
               )}
             </div>
-            {/* ========== END HERO IMAGE UPLOAD SECTION ========== */}
             <div
               className={`absolute -bottom-4 ${isRTL ? "-right-4 md:-right-6" : "-left-4 md:-left-6"} md:-bottom-6 bg-white rounded-xl p-3 md:p-4 shadow-lg animate-bounce-gentle`}
             >
