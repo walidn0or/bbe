@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, Upload, Image, Check, X, Eye, Users, Heart, Globe, Shield, Award } from "lucide-react"
 import { MediaUpload } from "@/components/media-upload"
 
+// Force dynamic rendering for admin pages
+export const dynamic = 'force-dynamic'
+
 export default function AboutUploadPage() {
   const [uploadedFiles, setUploadedFiles] = useState<{[key: string]: string}>({
     mainAbout: "",

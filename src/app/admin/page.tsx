@@ -16,6 +16,8 @@ import {
   Upload
 } from "lucide-react"
 
+export const dynamic = 'force-dynamic'
+
 export default function AdminDashboard() {
   const sections = [
     {

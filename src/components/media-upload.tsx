@@ -18,14 +18,14 @@ interface UploadedFile {
 interface MediaUploadProps {
   onUploaded?: (url: string) => void;
   acceptedTypes?: string;
-  maxSize?: string;
+  maxSize?: string | number;
   label?: string;
 }
 
 export function MediaUpload({ 
   onUploaded,
   acceptedTypes = 'image/*,video/*',
-  maxSize = "50", // in MB
+  maxSize = 50 * 1024 * 1024,
   label = 'Upload Media' 
 }: MediaUploadProps) {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
@@ -33,7 +33,9 @@ export function MediaUpload({
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const maxFileSize = parseInt(maxSize) * 1024 * 1024
+  const maxFileSize = typeof maxSize === 'string' 
+    ? parseInt(maxSize) * 1024 * 1024 
+    : maxSize;
 
   const generateId = () => Math.random().toString(36).substr(2, 9)
 

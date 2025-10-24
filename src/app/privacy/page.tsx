@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { Shield, Lock, Eye, UserCheck, Database, Globe, Mail } from "lucide-react"
 
+export const dynamic = 'force-dynamic'
+
 export default function PrivacyPolicyPage() {
   const router = useRouter()
 

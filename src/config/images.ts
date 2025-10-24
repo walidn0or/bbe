@@ -1,7 +1,8 @@
 // Centralized image configuration
 // Update image paths here to change images across all sections
 
-export const images = {
+
+export const images: any = {
   // Logo
   // To upload a new logo:
   // 1. Add your logo file to: public/images/
@@ -16,21 +17,22 @@ export const images = {
     background: "/images/videos/Orphanage(1).mov"
   },
 
-  // Videos Section - Featured videos to display after hero section
+  // Videos Section - The 4 uploaded videos
   videos: {
-    featured: "/images/videos/Orphanage(1).mov",
-    orphanage: "/images/videos/Orphanage(1).mov",
-    orphanage2: "/images/videos/Orphanage(3).MOV",
-    orphanage3: "/images/videos/Orphanage(3).MOV"
+    featured: "/images/videos/Business.mov",
+    video1: "/images/videos/Business.mov",
+    video2: "/images/videos/Orphanage(1).mov",
+    video3: "/images/videos/Orphanage(2).mov",
+    video4: "/images/videos/feedback.mp4",
+    video5: "/images/videos/Business.mov" // Fallback to first video
   },
 
-  // Impact Stories Videos
+  // Impact Stories Videos - Same 4 videos for home page
   impactStories: {
     welcome: "/images/videos/Business.mov",
     orphanageSupport: "/images/videos/Orphanage(1).mov",
-    educationProgram: "/images/videos/Orphanage(3).MOV",
-    communityImpact: "/images/videos/feedback(2).mov",
-
+    educationProgram: "/images/videos/Orphanage(2).mov",
+    communityImpact: "/images/videos/feedback.mp4",
   },
 
   // About Section
@@ -192,6 +194,6 @@ export const images = {
 }
 
 // Helper function to get image with fallback
-export const getImage = (imagePath: string, fallback: string = images.fallback.placeholder): string => {
+export const getImage = (imagePath: any, fallback: any = images.fallback.placeholder): any => {
   return imagePath || fallback
 }

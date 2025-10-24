@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, Upload, Image, Check, X, Eye, GraduationCap, Stethoscope, Users, Heart, Globe, Award } from "lucide-react"
 import { MediaUpload } from "@/components/media-upload"
 
+export const dynamic = 'force-dynamic'
+
 export default function ProgramsUploadPage() {
   const [uploadedFiles, setUploadedFiles] = useState<{[key: string]: string}>({
     education: "",

@@ -39,7 +39,7 @@ export default function UploadPage() {
       category: "Education",
       required: true,
       acceptedTypes: "image/*",
-      maxSize: "5MB",
+      maxSize: 5242880, // 5MB in bytes
       recommendedSize: "600x400px or larger",
       currentImage: uploadedFiles.featured,
       featured: true
@@ -51,7 +51,7 @@ export default function UploadPage() {
       category: "Partnership",
       required: false,
       acceptedTypes: "image/*",
-      maxSize: "5MB",
+      maxSize: 5242880, // 5MB in bytes
       recommendedSize: "400x250px or larger",
       currentImage: uploadedFiles.article1
     },
@@ -62,7 +62,7 @@ export default function UploadPage() {
       category: "Healthcare",
       required: false,
       acceptedTypes: "image/*",
-      maxSize: "5MB",
+      maxSize: 5242880, // 5MB in bytes
       recommendedSize: "400x250px or larger",
       currentImage: uploadedFiles.article2
     },
@@ -73,7 +73,7 @@ export default function UploadPage() {
       category: "Skills Training",
       required: false,
       acceptedTypes: "image/*",
-      maxSize: "5MB",
+      maxSize: 5242880, // 5MB in bytes
       recommendedSize: "400x250px or larger",
       currentImage: uploadedFiles.article3
     },
@@ -84,7 +84,7 @@ export default function UploadPage() {
       category: "Emergency Aid",
       required: false,
       acceptedTypes: "image/*",
-      maxSize: "5MB",
+      maxSize: 5242880, // 5MB in bytes
       recommendedSize: "400x250px or larger",
       currentImage: uploadedFiles.article4
     },
@@ -95,7 +95,7 @@ export default function UploadPage() {
       category: "Economic Empowerment",
       required: false,
       acceptedTypes: "image/*",
-      maxSize: "5MB",
+      maxSize: 5242880, // 5MB in bytes
       recommendedSize: "400x250px or larger",
       currentImage: uploadedFiles.article5
     },
@@ -106,7 +106,7 @@ export default function UploadPage() {
       category: "General",
       required: false,
       acceptedTypes: "image/*",
-      maxSize: "5MB",
+      maxSize: 5242880, // 5MB in bytes
       recommendedSize: "400x250px or larger",
       currentImage: uploadedFiles.article6
     }
@@ -193,7 +193,7 @@ export default function UploadPage() {
                   <MediaUpload
                     onUploaded={(url) => handleFileUploaded(item.key, url)}
                     acceptedTypes={item.type}
-                    maxSize="50MB"
+                    maxSize={52428800} // 50MB in bytes
                     label={`Upload ${item.title}`}
                   />
                 </CardContent>
@@ -302,7 +302,7 @@ export default function UploadPage() {
                     <h4 className="font-medium text-gray-900 mb-2">Requirements:</h4>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• File types: {featuredArticle.acceptedTypes}</li>
-                      <li>• Max size: {featuredArticle.maxSize}</li>
+                      <li>• Max size: {featuredArticle.maxSize / (1024 * 1024)}MB</li>
                       <li>• Recommended size: {featuredArticle.recommendedSize}</li>
                       <li>• <span className="text-red-600 font-medium">Required</span></li>
                     </ul>
@@ -376,7 +376,7 @@ export default function UploadPage() {
                       <h4 className="font-medium text-gray-900 mb-1 text-sm">Requirements:</h4>
                       <ul className="text-xs text-gray-600 space-y-1">
                         <li>• {article.acceptedTypes}</li>
-                        <li>• Max: {article.maxSize}</li>
+                        <li>• Max: {article.maxSize / (1024 * 1024)}MB</li>
                         <li>• Size: {article.recommendedSize}</li>
                       </ul>
                     </div>
@@ -484,7 +484,7 @@ export default function UploadPage() {
                   <MediaUpload
                     onUploaded={(url) => handleFileUploaded(item.key, url)}
                     acceptedTypes={item.type}
-                    maxSize={1024 * 1024 * 50}
+                    maxSize={52428800} // 50MB in bytes
                     label={`Upload ${item.title} Video`}
                   />
                   <div className="mt-3 p-3 bg-gray-50 rounded-lg">

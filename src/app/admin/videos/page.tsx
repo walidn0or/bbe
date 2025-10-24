@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, Upload, Video, Check, X, Eye, Play, Clock } from "lucide-react"
 import { MediaUpload } from "@/components/media-upload"
 
+export const dynamic = 'force-dynamic'
+
 export default function VideosUploadPage() {
   const [uploadedFiles, setUploadedFiles] = useState<{[key: string]: string}>({
     featured: "",

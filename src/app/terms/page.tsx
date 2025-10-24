@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { FileText, AlertCircle, Scale, Ban, DollarSign, Shield } from "lucide-react"
 
+export const dynamic = 'force-dynamic'
+
 export default function TermsOfUsePage() {
   const router = useRouter()
 

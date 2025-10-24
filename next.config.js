@@ -2,7 +2,6 @@
 const nextConfig = {
   // Production optimizations
   reactStrictMode: true,
-  swcMinify: true,
   
   // Image optimization
   images: {
@@ -46,6 +45,74 @@ const nextConfig = {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()'
           }
+        ],
+      },
+      {
+        source: '/videos/:path*.mp4',
+        headers: [
+          { 
+            key: 'Content-Type',
+            value: 'video/mp4' 
+          },
+          {
+            key: 'Content-Disposition',
+            value: 'inline'
+          },
+          {
+            key: 'Accept-Ranges',
+            value: 'bytes'
+          },
+        ],
+      },
+      {
+        source: '/videos/:path*.mov',
+        headers: [
+          { 
+            key: 'Content-Type',
+            value: 'video/quicktime' 
+          },
+          {
+            key: 'Content-Disposition',
+            value: 'inline'
+          },
+          {
+            key: 'Accept-Ranges',
+            value: 'bytes'
+          },
+        ],
+      },
+      {
+        source: '/images/videos/:path*.mp4',
+        headers: [
+          { 
+            key: 'Content-Type',
+            value: 'video/mp4' 
+          },
+          {
+            key: 'Content-Disposition',
+            value: 'inline'
+          },
+          {
+            key: 'Accept-Ranges',
+            value: 'bytes'
+          },
+        ],
+      },
+      {
+        source: '/images/videos/:path*.mov',
+        headers: [
+          { 
+            key: 'Content-Type',
+            value: 'video/quicktime' 
+          },
+          {
+            key: 'Content-Disposition',
+            value: 'inline'
+          },
+          {
+            key: 'Accept-Ranges',
+            value: 'bytes'
+          },
         ],
       },
     ]

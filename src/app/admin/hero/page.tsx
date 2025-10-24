@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, Upload, Image, Check, X, Eye } from "lucide-react"
 import { MediaUpload } from "@/components/media-upload"
 
+export const dynamic = 'force-dynamic'
+
 export default function HeroUploadPage() {
   const [uploadedFiles, setUploadedFiles] = useState<{[key: string]: string}>({
     mainHero: "",

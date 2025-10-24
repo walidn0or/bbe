@@ -1,5 +1,16 @@
 ﻿node_modules/
 .env
+.env.local
 .vercel/
 .DS_Store
- .next/ 
+.next/
+
+# Large video files (>100MB) - exclude from git
+public/images/videos/feedback(2).mov
+# Note: feedback.mp4 (79MB) is included and safe to push
+
+# Build output
+.next/
+out/
+build/
+dist/

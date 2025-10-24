@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, Upload, Image, Check, X, Eye, Newspaper, BookOpen } from "lucide-react"
 import { MediaUpload } from "@/components/media-upload"
 
+export const dynamic = 'force-dynamic'
+
 export default function NewsUploadPage() {
   const [uploadedFiles, setUploadedFiles] = useState<{[key: string]: string}>({
     featured: "",
