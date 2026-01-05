@@ -6,6 +6,7 @@ import { HeroSection } from "@/components/hero-section"
 import { HomeIntroSection } from "@/components/home-intro-section"
 import { CTASection } from "@/components/cta-section"
 import { Footer } from "@/components/footer"
+import { SuccessStoriesSection } from "@/components/success-stories-section"
 
 export default function HomePage() {
   // Navigation handler for separate pages
@@ -44,6 +45,7 @@ export default function HomePage() {
         <main className="flex-grow">
           <HeroSection scrollToSection={handleNavigation} />
           <HomeIntroSection scrollToSection={handleNavigation} />
+          <SuccessStoriesSection />
           <CTASection scrollToSection={handleNavigation} />
         </main>
         <Footer scrollToSection={handleNavigation} />

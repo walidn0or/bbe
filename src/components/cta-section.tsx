@@ -26,54 +26,50 @@ export function CTASection({ scrollToSection }: CTASectionProps) {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
             <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white text-center hover:bg-white/20 transition-all duration-300 hover:scale-105">
-              <CardContent className="pt-4 md:pt-6">
+              <CardContent className="pt-4 md:pt-6 pb-4 md:pb-6">
                 <Heart className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-3 md:mb-4 text-white" />
                 <h3 className="font-bold text-base md:text-lg mb-2">{t("cta.donate")}</h3>
-                <p className={`text-xs md:text-sm opacity-90 ${isRTL ? "text-right" : ""}`}>{t("cta.donateDesc")}</p>
+                <p className={`text-xs md:text-sm opacity-90 mb-4 ${isRTL ? "text-right" : ""}`}>{t("cta.donateDesc")}</p>
+                <Button
+                  size="sm"
+                  className="w-full bg-white/20 hover:bg-white/30 text-white border border-white/30 transition-all duration-300"
+                  onClick={() => scrollToSection("donate")}
+                >
+                  <Heart className={`h-4 w-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+                  {t("cta.makeDonation")}
+                </Button>
               </CardContent>
             </Card>
             <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white text-center hover:bg-white/20 transition-all duration-300 hover:scale-105">
-              <CardContent className="pt-4 md:pt-6">
+              <CardContent className="pt-4 md:pt-6 pb-4 md:pb-6">
                 <Users className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-3 md:mb-4 text-white" />
                 <h3 className="font-bold text-base md:text-lg mb-2">{t("cta.volunteer")}</h3>
-                <p className={`text-xs md:text-sm opacity-90 ${isRTL ? "text-right" : ""}`}>{t("cta.volunteerDesc")}</p>
+                <p className={`text-xs md:text-sm opacity-90 mb-4 ${isRTL ? "text-right" : ""}`}>{t("cta.volunteerDesc")}</p>
+                <Button
+                  size="sm"
+                  className="w-full bg-white/20 hover:bg-white/30 text-white border border-white/30 transition-all duration-300"
+                  onClick={() => scrollToSection("contact")}
+                >
+                  <Users className={`h-4 w-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+                  {t("cta.volunteerWith")}
+                </Button>
               </CardContent>
             </Card>
             <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white text-center hover:bg-white/20 transition-all duration-300 hover:scale-105">
-              <CardContent className="pt-4 md:pt-6">
+              <CardContent className="pt-4 md:pt-6 pb-4 md:pb-6">
                 <Globe className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-3 md:mb-4 text-white" />
                 <h3 className="font-bold text-base md:text-lg mb-2">{t("cta.partner")}</h3>
-                <p className={`text-xs md:text-sm opacity-90 ${isRTL ? "text-right" : ""}`}>{t("cta.partnerDesc")}</p>
+                <p className={`text-xs md:text-sm opacity-90 mb-4 ${isRTL ? "text-right" : ""}`}>{t("cta.partnerDesc")}</p>
+                <Button
+                  size="sm"
+                  className="w-full bg-white/20 hover:bg-white/30 text-white border border-white/30 transition-all duration-300"
+                  onClick={() => scrollToSection("contact")}
+                >
+                  <Globe className={`h-4 w-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+                  {t("cta.partnerWith")}
+                </Button>
               </CardContent>
             </Card>
-          </div>
-          <div
-            className={`flex flex-col sm:flex-row gap-3 md:gap-4 justify-center max-w-2xl mx-auto ${isRTL ? "sm:flex-row-reverse" : ""}`}
-          >
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg transition-all duration-300 hover:scale-105 text-sm md:text-base px-6 md:px-8"
-              onClick={() => scrollToSection("donate")}
-            >
-              <Heart className={`h-4 w-4 md:h-5 md:w-5 ${isRTL ? "ml-2" : "mr-2"}`} />
-              {t("cta.makeDonation")}
-            </Button>
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg transition-all duration-300 hover:scale-105 text-sm md:text-base px-6 md:px-8"
-              onClick={() => scrollToSection("contact")}
-            >
-              <Users className={`h-4 w-4 md:h-5 md:w-5 ${isRTL ? "ml-2" : "mr-2"}`} />
-              {t("cta.volunteerWith")}
-            </Button>
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg transition-all duration-300 hover:scale-105 text-sm md:text-base px-6 md:px-8"
-              onClick={() => scrollToSection("contact")}
-            >
-              <Globe className={`h-4 w-4 md:h-5 md:w-5 ${isRTL ? "ml-2" : "mr-2"}`} />
-              {t("cta.partnerWith")}
-            </Button>
           </div>
         </div>
       </div>

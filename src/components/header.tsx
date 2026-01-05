@@ -61,6 +61,8 @@ export function Header({ activeSection }: HeaderProps) {
     { name: t("header.programs"), id: "programs", href: "/programs" },
     { name: t("header.news"), id: "news", href: "/news" },
     { name: t("header.impact"), id: "impact", href: "/impact" },
+    { name: "Publications", id: "publications", href: "/publications" },
+    { name: "Enroll", id: "enroll", href: "/enroll" },
     { name: t("header.contact"), id: "contact", href: "/contact" },
   ]
 
@@ -70,25 +72,25 @@ export function Header({ activeSection }: HeaderProps) {
 
   return (
     <header className="bg-white/95 backdrop-blur-sm shadow-sm border-b sticky top-0 z-50 transition-all duration-300">
-      <div className="container mx-auto px-4 py-3 md:py-4">
-        <div className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
+      <div className="container mx-auto px-3 md:px-4 py-2 md:py-3">
+        <div className={`flex items-center justify-between gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
           {/* Logo Section */}
           <Link
             href="/"
-            className={`flex items-center space-x-2 md:space-x-4 cursor-pointer flex-shrink-0 ${isRTL ? "flex-row-reverse space-x-reverse" : ""}`}
+            className={`flex items-center space-x-2 md:space-x-3 cursor-pointer flex-shrink min-w-0 ${isRTL ? "flex-row-reverse space-x-reverse" : ""}`}
           >
             <Image
               src={images.logo}
               alt="Beyond Borders Empowerment Logo"
-              width={60}
-              height={60}
-              className="w-12 h-12 md:w-16 md:h-16"
+              width={48}
+              height={48}
+              className="w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 flex-shrink-0"
             />
-            <div className={`flex flex-col ${isRTL ? "text-right" : ""}`}>
-              <h1 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
+            <div className={`flex flex-col min-w-0 ${isRTL ? "text-right" : ""}`}>
+              <h1 className="text-sm md:text-lg lg:text-xl font-bold text-brand-blue leading-tight truncate">
                 Beyond Borders Empowerment
               </h1>
-              <p className="text-xs md:text-sm text-gray-600 hidden sm:block">
+              <p className="text-[10px] md:text-xs lg:text-sm text-gray-600 hidden sm:block truncate">
                 {t("")}
               </p>
             </div>

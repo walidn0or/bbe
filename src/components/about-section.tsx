@@ -130,16 +130,16 @@ export function AboutSection() {
               </div>
             </div>
             <div className={`order-1 lg:order-2 ${isRTL ? "lg:order-1 text-right" : ""}`}>
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">{t("about.storyTitle")}</h3>
-              <p className="text-gray-700 mb-4 md:mb-6 leading-relaxed">{t("about.storyText1")}</p>
-              <p className="text-gray-700 mb-4 md:mb-6 leading-relaxed">{t("about.storyText2")}</p>
-              <div className={`${isRTL ? "text-right" : ""}`}>
-                <Link href="/about/background">
-                  <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg transition-all duration-300 hover:scale-105 text-sm md:text-base px-6 md:px-7 py-3">
-                    Learn more about our background
-                  </Button>
-                </Link>
-              </div>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">Organizational Background</h3>
+              <p className="text-gray-700 mb-4 md:mb-6 leading-relaxed">
+                Beyond Borders Empowerment (BBE) is a registered nonprofit organization founded in early 2023 by a dedicated team of professionals, including educators, university professors, writers, medical doctors, journalists, human rights defenders, and legal experts. BBE is built on the philosophy and principles of human rights, social justice, respect for human dignity, and collective efforts to foster growth and empowerment.
+              </p>
+              <p className="text-gray-700 mb-4 md:mb-6 leading-relaxed">
+                At BBE, we work tirelessly towards sustainable outcomes, and we believe in the principle that "we teach our communities to fish, instead of giving them a fish." We are confident that such self-sufficiency and sustainability can only be achieved by ensuring equal rights and opportunities for all, enabling everyone to reach their maximum potential and make a difference — including women and girls, who make up half of the population.
+              </p>
+              <p className="text-gray-700 mb-4 md:mb-6 leading-relaxed">
+                That said, we prioritize not only meeting immediate needs but also fostering long-term sustainable development by equipping marginalized communities with the resources necessary for self-reliance. Since our founding, we have stood firmly committed to empowering marginalized communities by providing access to quality education, fostering economic independence through entrepreneurship and employment, and supporting access to essential healthcare, as well as providing humanitarian aid during crises. Through sustainable, community-led initiatives, we strive to close social gaps and equip individuals to become agents of lasting change.
+              </p>
             </div>
           </div>
 

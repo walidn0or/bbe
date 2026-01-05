@@ -60,7 +60,7 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
 
   const socialLinks = [
     { icon: MessageCircle, label: "WhatsApp", href: "https://chat.whatsapp.com/F05juiisyoi0S99QRf40I7", color: "text-green-600 hover:text-green-700" },
-    { icon: Facebook, label: "Facebook", href: "https://www.facebook.com/share/1BgHmLx9PT/?mibextid=wwXIfr", color: "text-blue-600 hover:text-blue-700" },
+    { icon: Facebook, label: "Facebook", href: "https://www.facebook.com/profile.php?id=61571567423972", color: "text-blue-600 hover:text-blue-700" },
     { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/beyond-borders-empowerment/", color: "text-blue-700 hover:text-blue-800" },
     { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/beyondbordersempowerment?igsh=MTdmOGgyazY4MG02eg%3D%3D&utm_source=qr", color: "text-pink-600 hover:text-pink-700" },
   ]
@@ -112,7 +112,12 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
                 </div>
                 <div>
                   <p className="font-semibold text-sm md:text-base">{t("contact.mainOffice")}</p>
-                  <p className="opacity-90 text-xs md:text-sm">21 Swallow Close, London SE14 5LZ, United Kingdom</p>
+                  <p className="opacity-90 text-xs md:text-sm">
+                    Pelican House,<br />
+                    144 Cambridge Heath Road,<br />
+                    Bethnal Green,<br />
+                    London, E1 5QJ
+                  </p>
                 </div>
               </div>
               <div
@@ -124,7 +129,8 @@ export function ContactSection({ scrollToSection }: ContactSectionProps) {
                 <div>
                   <p className="font-semibold text-sm md:text-base">{t("contact.countryOffice")}</p>
                   <p className="opacity-90 text-xs md:text-sm">
-                    Home 21, street 4, 3rd Phase of Khair Khana, District 11, Kabul, Afghanistan
+                    House No. 4, 10th District,<br />
+                    Shahe-e-Naw, Kabul, Afghanistan
                   </p>
                 </div>
               </div>

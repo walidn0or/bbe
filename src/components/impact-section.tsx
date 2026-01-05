@@ -8,10 +8,12 @@ export function ImpactSection() {
   const { t, isRTL } = useLanguage()
 
   const stats = [
-    { number: "500+", label: t("impact.girlsBenefiting"), icon: Users },
-    { number: "150+", label: t("impact.studentsVirtual"), icon: GraduationCap },
-    { number: "150", label: t("impact.orphansSupported"), icon: Heart },
-    { number: "24", label: t("impact.provincesReached"), icon: Globe },
+    { number: "400+", label: "students benefiting from our English Language Program", icon: Users },
+    { number: "500+", label: "community of refugees support in London", icon: Users },
+    { number: "150", label: "Online schooling (7-12) for Afghan girls", icon: GraduationCap },
+    { number: "110", label: "orphaned children supported", icon: Heart },
+    { number: "300+", label: "students in coding & Microsoft Office courses", icon: GraduationCap },
+    { number: "20+", label: "families supported with food, clothing, and medicine", icon: Heart },
   ]
 
   return (
@@ -23,7 +25,7 @@ export function ImpactSection() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t("impact.title")}</h2>
           <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">{t("impact.subtitle")}</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
           {stats.map((stat, index) => (
             <Card
               key={index}
