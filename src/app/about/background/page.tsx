@@ -5,7 +5,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { InlineImageUpload } from "@/components/inline-image-upload"
 import { useRouter } from "next/navigation"
-import { getImage, images } from "@/config/images"
+import { TeamSection } from "@/components/team-section"
 
 interface BackgroundContent {
   title: string
@@ -51,113 +51,6 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
   const [isAdmin, setIsAdmin] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  // Team members simple registry with local image overrides
-  type Member = { key: string; name: string; role: string; bio?: string; imageUrl: string }
-  const [members, setMembers] = useState<Member[]>([
-    {
-      key: "sosan-hashimi",
-      name: "Sosan Hashimi",
-      role: "Founder and Director",
-      bio:
-        "Scholar at UCL Political Science; former lecturer at Salam University; founder & CEO of Ravi Zan Media; 10+ years advocating for marginalized communities and human rights.",
-      imageUrl: images.about.team.sosan,
-    },
-    {
-      key: "farangis-fariwar",
-      name: "Farangis Fariwar",
-      role: "Board of Trustees",
-      bio:
-        "BSc Social Sciences (Open University, UK). Two decades in the UK; ESOL tutor; Accounts Technician (AAT). NGO experience with Afghanaid, IOM, IRC; active in community support in UK, Greece, and Afghanistan.",
-      imageUrl: images.about.team.farangis,
-    },
-    {
-      key: "imran-fazal",
-      name: "Imran Fazal",
-      role: "Board of Trustees",
-      bio:
-        "Gold Medalist; Information Scientist; author/translator of 87+ Pashto books; background in public sector reform, digital transformation, and community development; founder of IKF Enterprise.",
-      imageUrl: images.about.team.imran,
-    },
-    {
-      key: "kaihan-alambye",
-      name: "Kaihan Alambye",
-      role: "PhD Researcher and Writer",
-      bio:
-        "Researches violence, trauma, and political structures. PPE (Essex), MSc Anthropology of Politics, Violence & Crime (UCL); PhD at UCL on transgenerational trauma in marginalized communities.",
-      imageUrl: images.about.team.kaihan,
-    },
-    {
-      key: "waheed-niawash",
-      name: "Waheed Niawash",
-      role: "Country Director",
-      bio:
-        "Entrepreneur and FinTech specialist based in Kabul. BBA (Kabul University); Diploma in Accounting; multiple international certifications across IT, research, and digital payments.",
-      imageUrl: images.about.team.waheed,
-    },
-    {
-      key: "sadaf-ghawsi",
-      name: "Sadaf Ghawsi",
-      role: "Programs & Technical Lead / Project Management",
-      bio:
-        "Public Health (KMU); Business Administration (UoPeople). Former Operations Manager at AWCCI; technical officer in health sector; Program Manager at BBE; frequent national/international representative for Afghan women.",
-      imageUrl: images.about.team.sadaf,
-    },
-    {
-      key: "khatira-fikrat",
-      name: "Khatira Fikrat",
-      role: "HR & Administrative Manager; Educator",
-      bio:
-        "Business & Finance enthusiast (AUAF); English diploma (Muslim ELI). HR/Admin roles at multiple orgs; Executive Assistant at TEDx Share-e-Naw; fluent in Dari and English; passionate about education and community empowerment.",
-      imageUrl: images.about.team.khatira,
-    },
-    {
-      key: "geety-haidary",
-      name: "Geety Haidary",
-      role: "Researcher",
-      bio:
-        "LLB/Political Science (Kabul University); pursuing BBA (Finance) at AUAF. Volunteer roles at ALPA (faculty relations, curriculum coordinator), USIP mentorship program; experience in legal and logistics sectors.",
-      imageUrl: images.about.team.geety,
-    },
-    {
-      key: "hasina-zmarai",
-      name: "Hasina Zmarai",
-      role: "Researcher",
-      bio:
-        "Dedicated researcher skilled in academic studies, data collection, and analysis; delivers structured, precise, and high-quality research outputs.",
-      imageUrl: images.about.team.hasina,
-    },
-    {
-      key: "adeeba-bareen",
-      name: "Adeeba Bareen",
-      role: "Educator | Student | Community Volunteer",
-      bio:
-        "BBA (AUAF) and Economics (Women's Online University); TESOL/TTC; English instructor since 2021; active in student support/admin and youth volunteering; fluent in English, Turkish, Pashto, and Dari.",
-      imageUrl: images.about.team.adeeba,
-    },
-    {
-      key: "malika-hail",
-      name: "Malika Hail",
-      role: "Educator",
-      bio:
-        "Educator, artist, and student; Diploma in English; Certificate in Digital Marketing; training in business, mental health, and team building; teaches English/computers to Afghan girls; fluent in English, Dari, Pashto, Urdu.",
-      imageUrl: images.about.team.malika,
-    },
-
-    { key: "hamasa-noorzai",
-       name: "Hamasa Noorzai",
-        role: "Instructor",
-         bio: "",
-          imageUrl: images.about.team.hamasa 
-        },
-
-    { key: "zarghona-ahmadi",
-       name: "Zarghona Ahmadi",
-        role: "Instructor",
-         bio: "",
-          imageUrl: images.about.team.zarghona 
-        },
-  ])
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       setIsAdmin(new URLSearchParams(window.location.search).get("admin") === "1")
@@ -168,14 +61,6 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
           setContent((c) => ({ ...c, ...parsed }))
         } catch {}
       }
-
-      // Load member image overrides
-      setMembers((prev) =>
-        prev.map((m) => {
-          const url = localStorage.getItem(`team_image_${m.key}`)
-          return url ? { ...m, imageUrl: url } : m
-        })
-      )
     }
   }, [])
 
@@ -217,41 +102,8 @@ Respect for Dignity: We treat every individual and culture with the utmost respe
           </div>
         </div>
 
-        {/* Team Members with image uploads */}
-        <div className="max-w-6xl mx-auto mt-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Our Team</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {members.map((m, idx) => (
-              <div
-                key={m.key}
-                className="border rounded-xl p-4 shadow-sm bg-white hover:shadow-lg transition-shadow duration-300 opacity-0 translate-y-6"
-                style={{ animation: `fade-in-up 0.5s ease-out forwards`, animationDelay: `${idx * 60}ms` }}
-              >
-                <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-gray-100 mb-3">
-                  <Image src={getImage(m.imageUrl)} alt={m.name} fill className="object-cover" />
-                </div>
-                <div className="mb-2">
-                  <div className="font-semibold text-gray-900 text-base">{m.name}</div>
-                  <div className="text-sm text-gray-600">{m.role}</div>
-                </div>
-                {m.bio && (
-                  <p className="text-sm text-gray-700 line-clamp-4">{m.bio}</p>
-                )}
-                {isAdmin && (
-                  <div className="mt-3">
-                    <InlineImageUpload
-                      label="Change photo"
-                      storageKey={`team_image_${m.key}`}
-                      onUploaded={(url) =>
-                        setMembers((prev) => prev.map((mm) => (mm.key === m.key ? { ...mm, imageUrl: url } : mm)))
-                      }
-                    />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Team Section with popup bios */}
+        <TeamSection />
 
         {/* Call-to-Action Fill Section */}
         <div className="max-w-4xl mx-auto my-8 p-6 rounded-xl bg-red-50 flex flex-col items-center shadow">
