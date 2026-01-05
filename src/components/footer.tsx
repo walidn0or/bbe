@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Heart, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, Youtube, Building2, ExternalLink } from "lucide-react"
+import { Heart, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, Youtube, Building2, ExternalLink, MessageCircle } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 
 interface FooterProps {
@@ -25,9 +25,15 @@ export function Footer({ scrollToSection }: FooterProps) {
   const socialLinks = [
     {
       name: "Facebook",
-      href: "https://facebook.com/beyondbordersempowerment",
+      href: "https://www.facebook.com/profile.php?id=61571567423972",
       icon: Facebook,
       color: "hover:text-blue-600"
+    },
+    {
+      name: "WhatsApp",
+      href: "https://chat.whatsapp.com/F05juiisyoi0S99QRf40I7",
+      icon: MessageCircle,
+      color: "hover:text-green-500"
     },
     {
       name: "Twitter",
@@ -65,8 +71,8 @@ export function Footer({ scrollToSection }: FooterProps) {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Main Footer Content */}
-        <div className="py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+        <div className="py-8 md:py-12 lg:py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-12">
             
             {/* Organization Info */}
             <div className="lg:col-span-2">
@@ -83,7 +89,7 @@ export function Footer({ scrollToSection }: FooterProps) {
                     Beyond Borders Empowerment
                   </h3>
                   <p className="text-gray-300 text-sm">
-                    Registered UK Charity - Companies House: 15570506
+                    Registered UK Charity - Companies House: 15570506 | Charity Registration: 15570506
                   </p>
                 </div>
               </div>
@@ -93,31 +99,51 @@ export function Footer({ scrollToSection }: FooterProps) {
                 healthcare support, and humanitarian aid — with a special focus on women and girls.
               </p>
 
-              {/* Registration Details */}
+              {/* Addresses */}
               <div className="space-y-3 mb-6">
-                <div className={`flex items-center gap-3 text-gray-300 ${isRTL ? "flex-row-reverse" : ""}`}>
-                  <Building2 className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                  <span className="text-sm">Companies House Registration: 15570506</span>
+                <div className={`flex items-start gap-3 text-gray-300 ${isRTL ? "flex-row-reverse" : ""}`}>
+                  <MapPin className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm">
+                    <div className="font-semibold text-white mb-1">Main Address:</div>
+                    <div>Pelican House,</div>
+                    <div>144 Cambridge Heath Road,</div>
+                    <div>Bethnal Green,</div>
+                    <div>London, E1 5QJ</div>
+                  </div>
                 </div>
-                <div className={`flex items-center gap-3 text-gray-300 ${isRTL ? "flex-row-reverse" : ""}`}>
-                  <MapPin className="h-5 w-5 text-red-400 flex-shrink-0" />
-                  <span className="text-sm">London, United Kingdom</span>
+                <div className={`flex items-start gap-3 text-gray-300 ${isRTL ? "flex-row-reverse" : ""}`}>
+                  <MapPin className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm">
+                    <div className="font-semibold text-white mb-1">Country Address:</div>
+                    <div>House No. 4, 10th District,</div>
+                    <div>Shahe-e-Naw, Kabul, Afghanistan</div>
+                  </div>
                 </div>
                 <div className={`flex items-center gap-3 text-gray-300 ${isRTL ? "flex-row-reverse" : ""}`}>
                   <Mail className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <a href="mailto:info@beyondbordersempowerment.org" className="text-sm hover:text-white transition-colors">
+                  <a href="mailto:info@bbe.ngo" className="text-sm hover:text-white transition-colors">
                     info@bbe.ngo
                   </a>
                 </div>
               </div>
 
-              {/* Donation CTA */}
-              <Link href="/donate">
-                <Button className="gradient-bg text-white shadow-brand hover:shadow-brand-lg transition-all duration-300 hover:scale-105">
-                  <Heart className="h-5 w-5 mr-2" />
-                  Support Our Mission
-                </Button>
-              </Link>
+              {/* Support Us Section */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-white mb-3">Support Us</h4>
+                <div className="space-y-2">
+                  <a 
+                    href="https://gofundme.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    <Button className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all duration-300 hover:scale-105">
+                      <Heart className="h-4 w-4 mr-2" />
+                      Go Fund Me
+                    </Button>
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* Quick Links */}
@@ -163,14 +189,13 @@ export function Footer({ scrollToSection }: FooterProps) {
 
         {/* Social Media & Bottom Bar */}
         <div className="border-t border-gray-700 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            
-            {/* Social Media Links */}
-            <div>
-              <h4 className="text-sm font-semibold text-white mb-4 text-center md:text-left">
+          <div className="flex flex-col gap-6">
+            {/* Social Media Links - Above the line */}
+            <div className="text-center">
+              <h4 className="text-sm font-semibold text-white mb-4">
                 Follow Our Journey
               </h4>
-              <div className="flex items-center justify-center md:justify-start gap-4">
+              <div className="flex items-center justify-center gap-4">
                 {socialLinks.map((social) => (
                   <a
                     key={social.name}
@@ -186,30 +211,36 @@ export function Footer({ scrollToSection }: FooterProps) {
               </div>
             </div>
 
-            {/* Copyright & Legal */}
-            <div className="text-center md:text-right">
-              <p className="text-gray-400 text-sm mb-2">
-                &copy; 2025 Beyond Borders Empowerment Foundation
-              </p>
-              <p className="text-gray-500 text-xs">
-                Registered in England and Wales | Charity Registration: 15570506
-              </p>
-              <div className="flex items-center justify-center md:justify-end gap-4 mt-2 text-xs">
-                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
-                  Privacy Policy
-                </Link>
-                <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
-                  Terms of Service
-                </Link>
-                <a 
-                  href="https://find-and-update.company-information.service.gov.uk/company/15570506"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
-                >
-                  Companies House
-                  <ExternalLink className="h-3 w-3" />
-                </a>
+            {/* Divider Line */}
+            <div className="border-t border-gray-700"></div>
+
+            {/* Copyright & Legal - Bottom Right */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex-1"></div>
+              <div className="text-right">
+                <p className="text-gray-400 text-sm mb-1">
+                  &copy; 2025 Beyond Borders Empowerment Foundation
+                </p>
+                <p className="text-gray-500 text-xs mb-2">
+                  Registered in England and Wales | Charity Registration: 15570506
+                </p>
+                <div className="flex items-center justify-end gap-4 text-xs">
+                  <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
+                    Privacy Policy
+                  </Link>
+                  <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
+                    Terms of Service
+                  </Link>
+                  <a 
+                    href="https://find-and-update.company-information.service.gov.uk/company/15570506"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
+                  >
+                    Companies House
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

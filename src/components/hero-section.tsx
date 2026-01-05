@@ -1,12 +1,10 @@
 "use client"
 
-import Image from "next/image"
 import { useState, useEffect } from "react"
-import { InlineImageUpload } from "@/components/inline-image-upload"
 import { Button } from "@/components/ui/button"
-import { Heart, Users, Award, Upload } from "lucide-react"
+import { Heart } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
-import { images, getImage } from "@/config/images"
+import { images } from "@/config/images"
 
 interface HeroSectionProps {
   scrollToSection: (sectionId: string) => void
@@ -15,107 +13,82 @@ interface HeroSectionProps {
 export function HeroSection({ scrollToSection }: HeroSectionProps) {
   const { t, isRTL } = useLanguage()
   const [heroImg, setHeroImg] = useState<string>(images.hero.main)
-  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("hero_image_url")
       if (stored) setHeroImg(stored)
-      setIsAdmin(new URLSearchParams(window.location.search).get("admin") === "1")
     }
   }, [])
 
   return (
-    <section className="relative bg-gradient-to-br from-blue-50 via-white to-red-50 py-12 md:py-20 lg:py-24 overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/images/hero/background.jpg')] bg-cover bg-center opacity-5"></div>
+    <section className="relative overflow-hidden min-h-screen flex items-center py-10 md:py-16 lg:py-20">
+      {/* Full-bleed video background */}
+      <div className="absolute inset-0">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroImg})` }}
+          aria-hidden="true"
+        ></div>
+        <video
+          className="w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={images.hero.main}
+          aria-hidden="true"
+        >
+          <source src={images.hero.background} type="video/mp4" />
+          <source src={images.hero.background} type="video/quicktime" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/65 via-black/45 to-brand-blue/35 mix-blend-multiply backdrop-blur-sm"></div>
+      </div>
+
       <div className="container mx-auto px-4 relative z-10">
-        <div className={`grid lg:grid-cols-2 gap-8 lg:gap-12 items-start ${isRTL ? "lg:grid-flow-col-dense" : ""}`}>
-          <div className={`text-center ${isRTL ? "lg:text-right" : "lg:text-left"} order-2 lg:order-1`}>
-            <div
-              className={`inline-flex items-center bg-white/80 backdrop-blur-sm rounded-full px-3 md:px-4 py-2 mb-4 md:mb-6 shadow-sm ${isRTL ? "flex-row-reverse" : ""}`}
-            >
-              <Award className={`h-3 w-3 md:h-4 md:w-4 text-red-600 ${isRTL ? "ml-2" : "mr-2"}`} />
-              <span className="text-xs md:text-sm font-medium text-gray-700">{t("hero.badge")}</span>
-            </div>
+        <div className="relative bg-white/5 border border-white/15 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-white/3 to-white/0 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-white/5 mix-blend-overlay pointer-events-none"></div>
+          <div className={`relative flex flex-col items-center text-center gap-5 md:gap-7 p-6 md:p-10 ${isRTL ? "lg:text-right" : "lg:text-left"}`}>
             <h1
-              className={`text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 md:mb-4 leading-tight ${isRTL ? "text-right" : ""}`}
+              className={`max-w-4xl mx-auto text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-tight tracking-tight drop-shadow-lg ${isRTL ? "text-right" : ""}`}
             >
-              <span className="text-red-600">{t("hero.title1")}</span>
+              <span className="text-brand-blue">{t("hero.title1")}</span>
               <br />
-              <span className="text-blue-600">{t("hero.title2")}</span>
+              <span className="text-brand-blue">{t("hero.title2")}</span>
               <br />
-              <span className="text-gray-900">{t("hero.title3")}</span>
+              <span className="text-brand-blue">{t("hero.title3")}</span>
             </h1>
+            <p className={`text-base md:text-lg lg:text-xl text-white/95 leading-relaxed max-w-4xl mx-auto font-medium mb-4 ${isRTL ? "text-right" : ""}`}>
+              (Empowering Girls • Helping Communities • Transforming Lives)
+            </p>
             <p
-              className={`text-base md:text-lg lg:text-xl text-gray-700 mb-5 md:mb-6 max-w-2xl mx-auto lg:mx-0 ${isRTL ? "text-right" : ""}`}
+              className={`text-sm md:text-base lg:text-lg text-white/90 leading-relaxed max-w-3xl mx-auto ${isRTL ? "text-right" : ""}`}
             >
-              {t("hero.description")}
+              Beyond Borders Empowerment (BBE) is a women-led, non-profit organisation dedicated to fostering systemic change in marginalized communities. By centering women, youth, and children as agents of their own development, BBE addresses entrenched inequities arising from conflict, poverty, and social exclusion. Through an integrated portfolio of initiatives—including inclusive quality education, equitable healthcare access, economic empowerment, and context-driven innovation. BBE cultivates sustainable pathways for resilience, social transformation, sustainability and long-term community prosperity.
             </p>
             <div
-              className={`flex flex-col sm:flex-row gap-3 md:gap-4 max-w-md mx-auto lg:mx-0 sm:justify-start ${isRTL ? "sm:flex-row-reverse" : ""}`}
+              className={`flex flex-col sm:flex-row gap-2 md:gap-3 max-w-md mx-auto justify-center ${isRTL ? "sm:flex-row-reverse" : ""}`}
             >
               <Button
                 size="lg"
                 variant="default"
-                className="text-sm md:text-base px-6 md:px-8 py-3 md:py-4"
+                className="text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2.5 md:py-3 h-auto"
                 onClick={() => scrollToSection("donate")}
               >
-                <Heart className={`h-4 w-4 md:h-5 md:w-5 ${isRTL ? "ml-2" : "mr-2"}`} />
+                <Heart className={`h-3.5 w-3.5 md:h-4 md:w-4 lg:h-5 lg:w-5 ${isRTL ? "ml-1.5 md:ml-2" : "mr-1.5 md:mr-2"}`} />
                 {t("hero.supportMission")}
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="text-sm md:text-base px-6 md:px-8 py-3 md:py-4"
+                className="text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2.5 md:py-3 h-auto"
                 onClick={() => scrollToSection("about")}
                 aria-label="Learn more about our mission"
               >
                 {t("hero.learnMore")}
               </Button>
-            </div>
-          </div>
-          <div className={`relative order-1 lg:order-2 ${isRTL ? "lg:order-1" : ""}`}>
-            <div className="relative h-64 md:h-80 lg:h-96 xl:h-[500px] rounded-2xl overflow-hidden shadow-xl group">
-              <Image
-                src={heroImg}
-                alt={t("hero.imageAlt")}
-                fill
-                className="object-cover object-center transition-transform duration-300 group-hover:scale-105"
-                priority
-              />
-              {isAdmin && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <InlineImageUpload 
-                    storageKey="hero_image_url"
-                    onUploaded={(url) => {
-                      setHeroImg(url);
-                      if (typeof window !== 'undefined') {
-                        localStorage.setItem('hero_image_url', url);
-                      }
-                    }}
-                  >
-                    <div className="bg-white/90 hover:bg-white text-red-600 px-4 py-2 rounded-full flex items-center shadow-lg cursor-pointer">
-                      <Upload className="h-4 w-4 mr-2" />
-                      {t('common.changeImage')}
-                    </div>
-                  </InlineImageUpload>
-                </div>
-              )}
-            </div>
-            <div
-              className={`absolute -bottom-4 ${isRTL ? "-right-4 md:-right-6" : "-left-4 md:-left-6"} md:-bottom-6 bg-white rounded-xl p-3 md:p-4 shadow-lg animate-bounce-gentle`}
-            >
-              <div
-                className={`flex items-center space-x-2 md:space-x-3 ${isRTL ? "flex-row-reverse space-x-reverse" : ""}`}
-              >
-                <div className="w-8 h-8 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <Users className="h-4 w-4 md:h-6 md:w-6 text-green-600" />
-                </div>
-                <div className={isRTL ? "text-right" : ""}>
-                  <p className="font-bold text-lg md:text-2xl text-gray-900">500+</p>
-                  <p className="text-xs md:text-sm text-gray-600">{t("hero.livesImpacted")}</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
